@@ -1,0 +1,8 @@
+../driver/Src/gpio.c:10:6:Gpio_Init	24	static
+../driver/Src/gpio.c:114:10:Gpio_ReadPin	24	static
+../driver/Src/gpio.c:121:10:Gpio_ReadPort	24	static
+../driver/Src/gpio.c:128:8:Gpio_WritePin	16	static
+../driver/Src/gpio.c:139:8:Gpio_WritePort	16	static
+../driver/Src/gpio.c:143:8:Gpio_ToggleOutPin	16	static
+../driver/Src/gpio.c:147:8:Gpio_IrqConfig	24	static
+../driver/Src/gpio.c:198:6:Gpio_IrqHandler	16	static
