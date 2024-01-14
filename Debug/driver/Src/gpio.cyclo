@@ -1,8 +1,0 @@
-../driver/Src/gpio.c:10:6:Gpio_Init	16
-../driver/Src/gpio.c:114:10:Gpio_ReadPin	1
-../driver/Src/gpio.c:121:10:Gpio_ReadPort	1
-../driver/Src/gpio.c:128:8:Gpio_WritePin	2
-../driver/Src/gpio.c:139:8:Gpio_WritePort	1
-../driver/Src/gpio.c:143:8:Gpio_ToggleOutPin	1
-../driver/Src/gpio.c:147:8:Gpio_IrqConfig	13
-../driver/Src/gpio.c:198:6:Gpio_IrqHandler	2
