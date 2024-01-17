@@ -86,42 +86,42 @@
 
 static inline void Rcc_GpioA_Reset(void)
 {
-	Rcc_Reg *p_Rcc_Base_st = RCC;
+	Rcc_RegDef *p_Rcc_Base_st = RCC;
 	p_Rcc_Base_st->AHB1RSTR |= RCC_AHB1RSTR_GPIOARST_MASK;
 	p_Rcc_Base_st->AHB1RSTR &= ~RCC_AHB1RSTR_GPIOARST_MASK;
 }
 
 static inline void Rcc_GpioB_Reset(void)
 {
-	Rcc_Reg *p_Rcc_Base_st = RCC;
+	Rcc_RegDef *p_Rcc_Base_st = RCC;
 	p_Rcc_Base_st->AHB1RSTR |= RCC_AHB1RSTR_GPIOBRST_MASK;
 	p_Rcc_Base_st->AHB1RSTR &= ~RCC_AHB1RSTR_GPIOBRST_MASK;
 }
 
 static inline void Rcc_GpioC_Reset(void)
 {
-	Rcc_Reg *p_Rcc_Base_st = RCC;
+	Rcc_RegDef *p_Rcc_Base_st = RCC;
 	p_Rcc_Base_st->AHB1RSTR |= RCC_AHB1RSTR_GPIOCRST_MASK;
 	p_Rcc_Base_st->AHB1RSTR &= ~RCC_AHB1RSTR_GPIOCRST_MASK;
 }
 
 static inline void Rcc_GpioD_Reset(void)
 {
-	Rcc_Reg *p_Rcc_Base_st = RCC;
+	Rcc_RegDef *p_Rcc_Base_st = RCC;
 	p_Rcc_Base_st->AHB1RSTR |= RCC_AHB1RSTR_GPIODRST_MASK;
 	p_Rcc_Base_st->AHB1RSTR &= ~RCC_AHB1RSTR_GPIODRST_MASK;
 }
 
 static inline void Rcc_GpioE_Reset(void)
 {
-	Rcc_Reg *p_Rcc_Base_st = RCC;
+	Rcc_RegDef *p_Rcc_Base_st = RCC;
 	p_Rcc_Base_st->AHB1RSTR |= RCC_AHB1RSTR_GPIOERST_MASK;
 	p_Rcc_Base_st->AHB1RSTR &= ~RCC_AHB1RSTR_GPIOERST_MASK;
 }
 
 static inline void Rcc_GpioH_Reset(void)
 {
-	Rcc_Reg *p_Rcc_Base_st = RCC;
+	Rcc_RegDef *p_Rcc_Base_st = RCC;
 	p_Rcc_Base_st->AHB1RSTR |= RCC_AHB1RSTR_GPIOHRST_MASK;
 	p_Rcc_Base_st->AHB1RSTR &= ~RCC_AHB1RSTR_GPIOHRST_MASK;
 }

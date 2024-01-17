@@ -81,7 +81,7 @@
  *              Peripheral register structures
  *********************************************************/
 /*
- * GPIO peripheral register structure
+ * GPIO peripheral register definition
  */
 typedef struct
 {
@@ -95,14 +95,34 @@ typedef struct
     _RW uint32_t LCKR;
     _RW uint32_t AFRL;
     _RW uint32_t AFRH;
-} Gpio_Reg;
+} Gpio_RegDef;
 
-#define GPIOA    ((Gpio_Reg*)GPIOA_BASE)
-#define GPIOB    ((Gpio_Reg*)GPIOB_BASE)
-#define GPIOC    ((Gpio_Reg*)GPIOC_BASE)
-#define GPIOD    ((Gpio_Reg*)GPIOD_BASE)
-#define GPIOE    ((Gpio_Reg*)GPIOE_BASE)
-#define GPIOH    ((Gpio_Reg*)GPIOH_BASE)
+#define GPIOA    ((Gpio_RegDef*)GPIOA_BASE)
+#define GPIOB    ((Gpio_RegDef*)GPIOB_BASE)
+#define GPIOC    ((Gpio_RegDef*)GPIOC_BASE)
+#define GPIOD    ((Gpio_RegDef*)GPIOD_BASE)
+#define GPIOE    ((Gpio_RegDef*)GPIOE_BASE)
+#define GPIOH    ((Gpio_RegDef*)GPIOH_BASE)
+
+/* Position definition of bit fields in MODER register */
+#define NUM_BIT_PER_PIN_IN_MODER    2
+#define GPIO_MODER_BIT_POS(x)       (NUM_BIT_PER_PIN_IN_MODER * (x))
+
+/* Mask definition of bit fields in MODER register */
+#define MASK_OF_PIN_IN_MODER       0x3U
+#define GPIO_MODER_BIT_MASK(x)     (MASK_OF_PIN_IN_MODER << GPIO_MODER_BIT_POS(x))
+
+/* Position definition of bit fields in OTYPER register */
+#define GPIO_OTYPER_OT0    0U
+#define GPIO_OTYPER_OT1    1U
+#define GPIO_OTYPER_OT2    2U
+#define GPIO_OTYPER_OT3    3U
+#define GPIO_OTYPER_OT4    4U
+#define GPIO_OTYPER_OT5    5U
+#define GPIO_OTYPER_OT6    6U
+#define GPIO_OTYPER_OT7    7U
+#define GPIO_OTYPER_OT8    8U
+#define GPIO_OTYPER_OT9    9U
 
 /*
  * RCC peripheral register structure
@@ -138,9 +158,9 @@ typedef struct
 	_RW uint32_t PLLI2SCFGR;
 		uint32_t Reserved8;
 	_RW uint32_t DCKCFGR;
-} Rcc_Reg;
+} Rcc_RegDef;
 
-#define RCC    ((Rcc_Reg*)RCC_BASE)
+#define RCC    ((Rcc_RegDef*)RCC_BASE)
 
 #define RCC_AHB1ENR_GPIOAEN_POS     (0U)
 #define RCC_AHB1ENR_GPIOBEN_POS     (1U)
@@ -187,9 +207,9 @@ typedef struct
 	_RW uint32_t EXTI_FTSR;
 	_RW uint32_t EXTI_SWIER;
 	_RW uint32_t EXTI_PR;
-}Exti_Reg;
+}Exti_RegDef;
 
-#define EXTI    ((Exti_Reg*)EXTI_BASE)
+#define EXTI    ((Exti_RegDef*)EXTI_BASE)
 
 /*
  * SYSCFG register structure
@@ -201,9 +221,9 @@ typedef struct
 	_RW uint32_t EXTICR[4];
 	_RW uint32_t Reserved[2];
 	_RW uint32_t CMPCR;
-}Syscfg_Reg;
+}Syscfg_RegDef;
 
-#define SYSCFG    ((Syscfg_Reg*)SYSCFG_BASE)
+#define SYSCFG    ((Syscfg_RegDef*)SYSCFG_BASE)
 
 typedef enum
 {

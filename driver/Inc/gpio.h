@@ -124,19 +124,12 @@ typedef struct
 	Gpio_AltFun      Gpio_PinAltFun_e;
 }Gpio_Config;
 
-typedef struct
-{
-	Gpio_Reg    *p_Gpio_Base_st;
-	Gpio_Config *p_Gpio_Config_st;
-}Gpio_Handle;
-
-
-void   Gpio_Init(const Gpio_Handle *p_GpioCfg_st);
-uint8_t  Gpio_ReadPin(const Gpio_Reg *p_Gpio_st, Gpio_PinNum PinNum_u8);
-uint16_t Gpio_ReadPort(const Gpio_Reg *p_Gpio_st);
-void   Gpio_WritePin(Gpio_Reg *p_Gpio_st, Gpio_PinNum PinNum_u8, Gpio_PinState Value_u8);
-void   Gpio_WritePort(Gpio_Reg *p_Gpio_st, uint16_t Value);
-void   Gpio_ToggleOutPin(Gpio_Reg *p_Gpio_st, Gpio_PinNum PinNum_u8);
+void   Gpio_Init(Gpio_RegDef *p_Gpio_st, const Gpio_Config *p_GpioCfg_st);
+uint8_t  Gpio_ReadPin(const Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8);
+uint16_t Gpio_ReadPort(const Gpio_RegDef *p_Gpio_st);
+void   Gpio_WritePin(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8, Gpio_PinState Value_u8);
+void   Gpio_WritePort(Gpio_RegDef *p_Gpio_st, uint16_t Value);
+void   Gpio_ToggleOutPin(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8);
 void   Gpio_IrqConfig(Irq_Number IrqNum_u8, uint8_t Pri_u8, uint8_t State_u8);
 void   Gpio_IrqHandler(Gpio_PinNum PinNum_u8);
 
