@@ -1,9 +1,8 @@
-/*
- * stm32f401re.h
- *
- *  Created on: Jan 9, 2024
- *  Author: phamtien758
- */
+/******************************************************************************
+ * File: stm32f401re.h
+ * Author: phamtien758
+ * 
+ ******************************************************************************/
 
 #ifndef STM32F401RE_H
 #define STM32F401RE_H
@@ -104,25 +103,113 @@ typedef struct
 #define GPIOE    ((Gpio_RegDef*)GPIOE_BASE)
 #define GPIOH    ((Gpio_RegDef*)GPIOH_BASE)
 
-/* Position definition of bit fields in MODER register */
-#define NUM_BIT_PER_PIN_IN_MODER    2
+/* Position macro of bit fields in MODER register */
+#define NUM_BIT_PER_PIN_IN_MODER    2U
 #define GPIO_MODER_BIT_POS(x)       (NUM_BIT_PER_PIN_IN_MODER * (x))
 
-/* Mask definition of bit fields in MODER register */
-#define MASK_OF_PIN_IN_MODER       0x3U
-#define GPIO_MODER_BIT_MASK(x)     (MASK_OF_PIN_IN_MODER << GPIO_MODER_BIT_POS(x))
+/* Mask macro of bit fields in MODER register */
+#define MASK_OF_PIN_IN_MODER        ((uint32_t)0x3)
+#define GPIO_MODER_BIT_MASK(x)      (MASK_OF_PIN_IN_MODER << \
+                                     GPIO_MODER_BIT_POS(x))
 
-/* Position definition of bit fields in OTYPER register */
-#define GPIO_OTYPER_OT0    0U
-#define GPIO_OTYPER_OT1    1U
-#define GPIO_OTYPER_OT2    2U
-#define GPIO_OTYPER_OT3    3U
-#define GPIO_OTYPER_OT4    4U
-#define GPIO_OTYPER_OT5    5U
-#define GPIO_OTYPER_OT6    6U
-#define GPIO_OTYPER_OT7    7U
-#define GPIO_OTYPER_OT8    8U
-#define GPIO_OTYPER_OT9    9U
+/* Position macro of bit fields in OTYPER register */
+#define NUM_BIT_PER_PIN_IN_OTYPER   1U
+#define GPIO_OTYPER_BIT_POS(x)      (NUM_BIT_PER_PIN_IN_OTYPER * (x))
+
+/* Mask macro of bit fields in OTYPER register */
+#define MASK_OF_PIN_IN_OTYPER       ((uint32_t)0x1)
+#define GPIO_OTYPER_BIT_MASK(x)     (MASK_OF_PIN_IN_OTYPER << \
+                                     GPIO_OTYPER_BIT_POS(x))
+
+/* Position macro of bit fields in OSPEEDR register */
+#define NUM_BIT_PER_PIN_IN_OSPEEDR  2U
+#define GPIO_OSPEEDR_BIT_POS(x)     (NUM_BIT_PER_PIN_IN_OSPEEDR * (x))
+
+/* Mask macro of bit fields in OSPEEDR register */
+#define MASK_OF_PIN_IN_OSPEEDR      ((uint32_t)0x3)
+#define GPIO_OSPEEDR_BIT_MASK(x)    (MASK_OF_PIN_IN_OSPEEDR << \
+                                     GPIO_OSPEEDR_BIT_POS(x))
+
+/* Position macro of bit fields in PUPDR register */
+#define NUM_BIT_PER_PIN_IN_PUPDR    2U
+#define GPIO_PUPDR_BIT_POS(x)       (NUM_BIT_PER_PIN_IN_PUPDR * (x))
+
+/* Mask macro of bit fields in PUPDR register */
+#define MASK_OF_PIN_IN_PUPDR        ((uint32_t)0x3)
+#define GPIO_PUPDR_BIT_MASK(x)      (MASK_OF_PIN_IN_PUPDR << \
+                                     GPIO_PUPDR_BIT_POS(x))
+
+/* Position macro of bit fields in IDR register */
+#define NUM_BIT_PER_PIN_IN_IDR      1U
+#define GPIO_IDR_BIT_POS(x)         (NUM_BIT_PER_PIN_IN_IDR * (x))
+
+/* Mask macro of bit fields in IDR register */
+#define MASK_OF_PIN_IN_IDR          ((uint32_t)0x1)
+#define GPIO_IDR_BIT_MASK(x)        (MASK_OF_PIN_IN_IDR << GPIO_IDR_BIT_POS(x))
+
+/* Position macro of bit fields in ODR register */
+#define NUM_BIT_PER_PIN_IN_ODR      1U
+#define GPIO_ODR_BIT_POS(x)         (NUM_BIT_PER_PIN_IN_ODR * (x))
+
+/* Mask macro of bit fields in ODR register */
+#define MASK_OF_PIN_IN_ODR          ((uint32_t)0x1)
+#define GPIO_ODR_BIT_MASK(x)        (MASK_OF_PIN_IN_ODR << GPIO_ODR_BIT_POS(x))
+
+/* Position macro of bit fields in BSRR_BS register */
+#define NUM_BIT_PER_PIN_IN_BSRR_BS  1U
+#define GPIO_BSRR_BS_BIT_POS(x)     (NUM_BIT_PER_PIN_IN_BSRR_BS * (x))
+
+/* Mask macro of bit fields in BSRR_BS register */
+#define MASK_OF_PIN_IN_BSRR_BS      ((uint32_t)0x1)
+#define GPIO_BSRR_BS_BIT_MASK(x)    (MASK_OF_PIN_IN_BSRR_BS << \
+                                     GPIO_BSRR_BS_BIT_POS)
+
+/* Position macro of bit fields in BSRR_BR register */
+#define START_POS_OF_BSRR_BR        16U
+#define NUM_BIT_PER_PIN_IN_BSRR_BR  1U
+#define GPIO_BSRR_BR_BIT_POS(x)     (START_POS_OF_BSRR_BR + \
+                                     NUM_BIT_PER_PIN_IN_BSRR_BR * (x))
+
+/* Mask macro of bit fields in BSRR_BR register */
+#define MASK_OF_PIN_IN_BSRR_BR      ((uint32_t)0x1)
+#define GPIO_BSRR_BR_BIT_MASK(x)    (MASK_OF_PIN_IN_BSRR_BR << \
+                                     GPIO_BSRR_BR_BIT_POS(x))
+
+/* Position macro of bit fields in LCKR_LCK register */
+#define NUM_BIT_PER_PIN_IN_LCKR_LCK     1U
+#define GPIO_LCKR_LCK_BIT_POS(x)        (NUM_BIT_PER_PIN_IN_LCKR_LCK * (x))
+
+/* Mask macro of bit fields in LCKR_LCK register */
+#define MASK_OF_PIN_IN_LCKR_LCK         ((uint32_t)0x1)
+#define GPIO_LCKR_LCK_BIT_MASK(x)       (MASK_OF_PIN_IN_LCKR_LCK << \
+                                         GPIO_LCKR_LCK_BIT_POS)
+
+/* Position macro of bit fields LCKR_LCKK */
+#define GPIO_LCKR_LCKK_POS          16U
+
+/* Mask macro of bit fields LCKR_LCKK */
+#define GPIO_LCKR_LCKK_MASK         ((uint32_t)0x10000)
+
+/* Position macro of bit fields in AFRL register */
+#define NUM_BIT_PER_PIN_IN_AFRL     4U
+#define GPIO_AFRL_BIT_POS(x)        (NUM_BIT_PER_PIN_IN_AFRL * (x))
+
+/* Mask macro of bit fields in AFRL register */
+#define MASK_OF_PIN_IN_AFRL         ((uint32_t)0xF)
+#define GPIO_AFRL_BIT_MASK(x)       (MASK_OF_PIN_IN_AFRL << \
+                                     GPIO_AFRL_BIT_POS(x))
+
+/* Position macro of bit fields in AFRH register */
+#define PIN_NUM_START_IN_AFRH       8U
+#define NUM_BIT_PER_PIN_IN_AFRH     4U
+#define GPIO_AFRH_BIT_POS(x)        (NUM_BIT_PER_PIN_IN_AFRL * \
+                                    ((x) - PIN_NUM_START_IN_AFRH))
+
+/* Mask macro of bit fields in AFRH register */
+#define MASK_OF_PIN_IN_AFRH         ((uint32_t)0xF)
+#define GPIO_AFRH_BIT_MASK(x)       (MASK_OF_PIN_IN_AFRH << \
+                                     GPIO_AFRH_BIT_POS(x))
+
 
 /*
  * RCC peripheral register structure
