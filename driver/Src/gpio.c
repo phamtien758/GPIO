@@ -147,7 +147,7 @@ void   Gpio_WritePin(Gpio_RegDef *p_Gpio_st,
     }
 }
 
-void   Gpio_ToggleOutPin(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8)
+void   Gpio_TogglePin(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8)
 {
     if(p_Gpio_st->ODR & GPIO_ODR_BIT_MASK(PinNum_u8))
     {
