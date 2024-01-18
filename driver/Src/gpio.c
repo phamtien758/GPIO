@@ -128,33 +128,35 @@ uint8_t  Gpio_ReadPin(const Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8)
 
     return Value_u8;
 }
-uint16_t Gpio_ReadPort(const Gpio_RegDef *p_Gpio_st)
-{
-    uint16_t Value_u16;
-    Value_u16 = (uint16_t)(p_Gpio_st->IDR);
 
-    return Value_u16;
-}
 void   Gpio_WritePin(Gpio_RegDef *p_Gpio_st,
                      Gpio_PinNum PinNum_u8,
                      Gpio_PinState Value_u8)
 {
     if(GPIO_RESET == Value_u8)
     {
-        p_Gpio_st->ODR &= ~(1 << PinNum_u8);
+        p_Gpio_st->BSRR = GPIO_BSRR_BR_BIT_MASK(PinNum_u8);
+    }
+    else if (GPIO_SET == Value_u8)
+    {
+        p_Gpio_st->BSRR = GPIO_BSRR_BS_BIT_MASK(PinNum_u8);
     }
     else
     {
-        p_Gpio_st->ODR |= (1 << PinNum_u8);
+        /* Do nothing */
     }
 }
-void   Gpio_WritePort(Gpio_RegDef *p_Gpio_st, uint16_t Value_u16)
-{
-    p_Gpio_st->ODR = Value_u16;
-}
+
 void   Gpio_ToggleOutPin(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8)
 {
-    p_Gpio_st->ODR ^= (1 << PinNum_u8);
+    if(p_Gpio_st->ODR & GPIO_ODR_BIT_MASK(PinNum_u8))
+    {
+        p_Gpio_st->BSRR = GPIO_BSRR_BR_BIT_MASK(PinNum_u8);
+    }
+    else
+    {
+        p_Gpio_st->BSRR = GPIO_BSRR_BS_BIT_MASK(PinNum_u8);
+    }
 }
 void   Gpio_IrqConfig(Irq_Number IrqNum_u8, uint8_t Pri_u8, uint8_t State_u8)
 {

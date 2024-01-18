@@ -162,7 +162,7 @@ typedef struct
 /* Mask macro of bit fields in BSRR_BS register */
 #define MASK_OF_PIN_IN_BSRR_BS      ((uint32_t)0x1)
 #define GPIO_BSRR_BS_BIT_MASK(x)    (MASK_OF_PIN_IN_BSRR_BS << \
-                                     GPIO_BSRR_BS_BIT_POS)
+                                     GPIO_BSRR_BS_BIT_POS(x))
 
 /* Position macro of bit fields in BSRR_BR register */
 #define START_POS_OF_BSRR_BR        16U
@@ -182,7 +182,7 @@ typedef struct
 /* Mask macro of bit fields in LCKR_LCK register */
 #define MASK_OF_PIN_IN_LCKR_LCK         ((uint32_t)0x1)
 #define GPIO_LCKR_LCK_BIT_MASK(x)       (MASK_OF_PIN_IN_LCKR_LCK << \
-                                         GPIO_LCKR_LCK_BIT_POS)
+                                         GPIO_LCKR_LCK_BIT_POS(x))
 
 /* Position macro of bit fields LCKR_LCKK */
 #define GPIO_LCKR_LCKK_POS          16U
