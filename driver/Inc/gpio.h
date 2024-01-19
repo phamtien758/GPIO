@@ -1,8 +1,8 @@
-/******************************************************************************
+/*
  * File: gpio.h
  * Author: phamtien758
  * 
- ******************************************************************************/
+ */
 
 #ifndef GPIO_H
 #define GPIO_H
@@ -27,11 +27,20 @@ typedef enum
     GPIO_MODE_IN      = 0,
 	GPIO_MODE_OUT     = 1,
 	GPIO_MODE_ALT     = 2,
-    GPIO_MODE_ANAL    = 3,
-	GPIO_MODE_IR_FE   = 4,
-	GPIO_MODE_IR_RE   = 5,
-	GPIO_MODE_IR_FRE  = 6
+    GPIO_MODE_ANAL    = 3
 }Gpio_Mode;
+
+/*
+ * @Gpio_EIMode_e
+ *
+ */
+typedef enum
+{
+	GPIO_MODE_EIR_FE   = 0,
+	GPIO_MODE_EIR_RE   = 1,
+	GPIO_MODE_EIR_FRE  = 2,
+	GPIO_MODE_EIR_OFF  = 3
+}Gpio_EIMode_e;
 
 /*
  * @Gpio_OutType_e
@@ -121,6 +130,7 @@ typedef struct
 	Gpio_PullUpDown  Gpio_PinPuPd_e;
 	Gpio_OutType     Gpio_PinOutType_e;
 	Gpio_AltFun      Gpio_PinAltFun_e;
+	Gpio_EIMode_e    Gpio_PinEIMode_e;
 }Gpio_Config;
 
 void   Gpio_Init(Gpio_RegDef *p_Gpio_st, const Gpio_Config *p_GpioCfg_st);

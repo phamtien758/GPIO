@@ -1,8 +1,7 @@
 /*
- * stub.h
- *
- *  Created on: Jan 10, 2024
- *  Author: phamtien758
+ * File: stub.h
+ * Author: phamtien758
+ * 
  */
 
 #ifndef STUB_H

@@ -1,12 +1,79 @@
-/******************************************************************************
+/*
  * File: gpio.c
  * Author: phamtien758
  * 
- ******************************************************************************/
+ */
 
+/*** INCLUDE ************************************/
 #include "gpio.h"
 #include "stub.h"
 
+/*** PROTOTYPE **********************************/
+static void Gpio_EIInit(Gpio_RegDef *p_Gpio_st, \
+                        const Gpio_Config *p_GpioCfg_st);
+
+/*** VARIABLE ***********************************/
+
+/*** STATIC FUNCTION ****************************/
+static void Gpio_EIInit(Gpio_RegDef *p_Gpio_st, const Gpio_Config *p_GpioCfg_st)
+{
+    if(GPIO_MODE_EIR_FE == p_GpioCfg_st->Gpio_PinMode_e)
+    {
+        EXTI->EXTI_FTSR |= (0x1 << p_GpioCfg_st->Gpio_PinNum_e);
+        EXTI->EXTI_RTSR &= ~(0x1 << p_GpioCfg_st->Gpio_PinNum_e);
+    }
+    else if(GPIO_MODE_EIR_RE == p_GpioCfg_st->Gpio_PinMode_e)
+    {
+        EXTI->EXTI_FTSR &= ~(0x1 << p_GpioCfg_st->Gpio_PinNum_e);
+        EXTI->EXTI_RTSR |= (0x1 << p_GpioCfg_st->Gpio_PinNum_e);
+    }
+    else if(GPIO_MODE_EIR_FRE == p_GpioCfg_st->Gpio_PinMode_e)
+    {
+        EXTI->EXTI_FTSR |= (0x1 << p_GpioCfg_st->Gpio_PinNum_e);
+        EXTI->EXTI_RTSR |= (0x1 << p_GpioCfg_st->Gpio_PinNum_e);
+    }
+    else
+    {
+        /* Do nothing */
+    }
+
+    /* Select port for Exit external interrupt  */
+    Temp_u8 = (p_GpioCfg_st->Gpio_PinNum_e) / 4;
+    Pos_u8 = 4 * ((p_GpioCfg_st->Gpio_PinNum_e) % 4);
+
+    switch ((uint32_t)p_Gpio_st)
+    {
+        case (uint32_t)GPIOA:
+            TempValue_u32 = 0x0U;
+            break;
+        case (uint32_t)GPIOB:
+            TempValue_u32 = 0x1U;
+            break;
+        case (uint32_t)GPIOC:
+            TempValue_u32 = 0x2U;
+            break;
+        case (uint32_t)GPIOD:
+            TempValue_u32 = 0x3U;
+            break;
+        case (uint32_t)GPIOE:
+            TempValue_u32 = 0x4U;
+            break;
+        case (uint32_t)GPIOH:
+            TempValue_u32 = 0x4U;
+            break;
+        default:
+            break;
+    }
+
+    RCC_SYSCFG_CLK_EN();
+    SYSCFG->EXTICR[Temp_u8] |= (TempValue_u32 << Pos_u8);
+
+    /* Enable interrupt request from Exit line  */
+    EXTI->EXTI_IMR |= (0x1 << p_GpioCfg_st->Gpio_PinNum_e);
+}
+
+
+/*** FUNCTIONS **********************************/
 void Gpio_Init(Gpio_RegDef *p_Gpio_st, const Gpio_Config *p_GpioCfg_st)
 {
     uint32_t TempValue_u32;
@@ -62,69 +129,17 @@ void Gpio_Init(Gpio_RegDef *p_Gpio_st, const Gpio_Config *p_GpioCfg_st)
     }
 
     /* Interrupt configuration */
-    if(GPIO_MODE_ANAL < p_GpioCfg_st->Gpio_PinMode_e)
+    if(GPIO_MODE_EIR_OFF != p_GpioCfg_st->Gpio_PinEIMode_e)
     {
-        if(GPIO_MODE_IR_FE == p_GpioCfg_st->Gpio_PinMode_e)
-        {
-            EXTI->EXTI_FTSR |= (0x1 << p_GpioCfg_st->Gpio_PinNum_e);
-            EXTI->EXTI_RTSR &= ~(0x1 << p_GpioCfg_st->Gpio_PinNum_e);
-        }
-        else if(GPIO_MODE_IR_RE == p_GpioCfg_st->Gpio_PinMode_e)
-        {
-            EXTI->EXTI_FTSR &= ~(0x1 << p_GpioCfg_st->Gpio_PinNum_e);
-            EXTI->EXTI_RTSR |= (0x1 << p_GpioCfg_st->Gpio_PinNum_e);
-        }
-        else if(GPIO_MODE_IR_FRE == p_GpioCfg_st->Gpio_PinMode_e)
-        {
-            EXTI->EXTI_FTSR |= (0x1 << p_GpioCfg_st->Gpio_PinNum_e);
-            EXTI->EXTI_RTSR |= (0x1 << p_GpioCfg_st->Gpio_PinNum_e);
-        }
-        else
-        {
-            /* Do nothing */
-        }
+        Gpio_EIInit(p_Gpio_st, p_GpioCfg_st);
     }
-    /* Select port for Exit external interrupt  */
-    Temp_u8 = (p_GpioCfg_st->Gpio_PinNum_e) / 4;
-    Pos_u8 = 4 * ((p_GpioCfg_st->Gpio_PinNum_e) % 4);
-
-    switch ((uint32_t)p_Gpio_st)
-    {
-        case (uint32_t)GPIOA:
-            TempValue_u32 = 0x0U;
-            break;
-        case (uint32_t)GPIOB:
-            TempValue_u32 = 0x1U;
-            break;
-        case (uint32_t)GPIOC:
-            TempValue_u32 = 0x2U;
-            break;
-        case (uint32_t)GPIOD:
-            TempValue_u32 = 0x3U;
-            break;
-        case (uint32_t)GPIOE:
-            TempValue_u32 = 0x4U;
-            break;
-        case (uint32_t)GPIOH:
-            TempValue_u32 = 0x4U;
-            break;
-        default:
-            break;
-    }
-
-    RCC_SYSCFG_CLK_EN();
-    SYSCFG->EXTICR[Temp_u8] |= (TempValue_u32 << Pos_u8);
-
-    /* Enable interrupt request from Exit line  */
-    EXTI->EXTI_IMR |= (0x1 << p_GpioCfg_st->Gpio_PinNum_e);
-
 }
 
 uint8_t  Gpio_ReadPin(const Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8)
 {
     uint8_t Value_u8;
-    Value_u8 = (uint8_t)(((p_Gpio_st->IDR) >> \
-                           GPIO_IDR_BIT_POS(PinNum_u8) & MASK_OF_PIN_IN_IDR));
+    Value_u8 = (uint8_t)(((p_Gpio_st->IDR) >> GPIO_IDR_BIT_POS(PinNum_u8) & \
+                           MASK_OF_PIN_IN_GPIO_IDR));
 
     return Value_u8;
 }

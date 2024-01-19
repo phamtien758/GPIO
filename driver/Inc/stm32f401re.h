@@ -1,8 +1,8 @@
-/******************************************************************************
+/*
  * File: stm32f401re.h
  * Author: phamtien758
  * 
- ******************************************************************************/
+ */
 
 #ifndef STM32F401RE_H
 #define STM32F401RE_H
@@ -12,6 +12,24 @@
 /*************************************************************
  *            Cortex-M4 Processor Peripheral
  *************************************************************/
+/*
+ * Definition of IRQ number
+ */
+typedef enum
+{
+    IRQ_NUM_EXTI16  = 1,
+    IRQ_NUM_EXTI21  = 2,
+    IRQ_NUM_EXTI22  = 3,
+    IRQ_NUM_EXTI0   = 6,
+    IRQ_NUM_EXTI1   = 7,
+    IRQ_NUM_EXTI2   = 8,
+    IRQ_NUM_EXTI3   = 9,
+    IRQ_NUM_EXTI4   = 10,
+    IRQ_NUM_EXTI9_5 = 23,
+    IRQ_NUM_EXTI17  = 41,
+    IRQ_NUM_EXTI18  = 42
+}Irq_Number;
+
 /*
  * Definition of NVIC peripheral base address
  */
@@ -103,148 +121,159 @@ typedef struct
 #define GPIOE    ((Gpio_RegDef*)GPIOE_BASE)
 #define GPIOH    ((Gpio_RegDef*)GPIOH_BASE)
 
-/* Position macro of bit fields in MODER register */
-#define NUM_BIT_PER_PIN_IN_MODER    2U
-#define GPIO_MODER_BIT_POS(x)       (NUM_BIT_PER_PIN_IN_MODER * (x))
+/* Position macro of bit fields in GPIO_MODER register */
+#define NUM_BIT_PER_PIN_IN_GPIO_MODER    2U
+#define GPIO_MODER_BIT_POS(pinNum)       (NUM_BIT_PER_PIN_IN_GPIO_MODER * \
+                                          (pinNum))
 
-/* Mask macro of bit fields in MODER register */
-#define MASK_OF_PIN_IN_MODER        ((uint32_t)0x3)
-#define GPIO_MODER_BIT_MASK(x)      (MASK_OF_PIN_IN_MODER << \
-                                     GPIO_MODER_BIT_POS(x))
+/* Mask macro of bit fields in GPIO_MODER register */
+#define MASK_OF_PIN_IN_GPIO_MODER        ((uint32_t)0x3)
+#define GPIO_MODER_BIT_MASK(pinNum)      (MASK_OF_PIN_IN_GPIO_MODER << \
+                                          GPIO_MODER_BIT_POS(pinNum))
 
-/* Position macro of bit fields in OTYPER register */
-#define NUM_BIT_PER_PIN_IN_OTYPER   1U
-#define GPIO_OTYPER_BIT_POS(x)      (NUM_BIT_PER_PIN_IN_OTYPER * (x))
+/* Position macro of bit fields in GPIO_OTYPER register */
+#define NUM_BIT_PER_PIN_IN_GPIO_OTYPER   1U
+#define GPIO_OTYPER_BIT_POS(pinNum)      (NUM_BIT_PER_PIN_IN_GPIO_OTYPER * \
+                                          (pinNum))
 
-/* Mask macro of bit fields in OTYPER register */
-#define MASK_OF_PIN_IN_OTYPER       ((uint32_t)0x1)
-#define GPIO_OTYPER_BIT_MASK(x)     (MASK_OF_PIN_IN_OTYPER << \
-                                     GPIO_OTYPER_BIT_POS(x))
+/* Mask macro of bit fields in GPIO_OTYPER register */
+#define MASK_OF_PIN_IN_GPIO_OTYPER       ((uint32_t)0x1)
+#define GPIO_OTYPER_BIT_MASK(pinNum)     (MASK_OF_PIN_IN_GPIO_OTYPER << \
+                                          GPIO_OTYPER_BIT_POS(pinNum))
 
-/* Position macro of bit fields in OSPEEDR register */
-#define NUM_BIT_PER_PIN_IN_OSPEEDR  2U
-#define GPIO_OSPEEDR_BIT_POS(x)     (NUM_BIT_PER_PIN_IN_OSPEEDR * (x))
+/* Position macro of bit fields in GPIO_OSPEEDR register */
+#define NUM_BIT_PER_PIN_IN_GPIO_OSPEEDR  2U
+#define GPIO_OSPEEDR_BIT_POS(pinNum)     (NUM_BIT_PER_PIN_IN_GPIO_OSPEEDR * \
+                                          (pinNum))
 
-/* Mask macro of bit fields in OSPEEDR register */
-#define MASK_OF_PIN_IN_OSPEEDR      ((uint32_t)0x3)
-#define GPIO_OSPEEDR_BIT_MASK(x)    (MASK_OF_PIN_IN_OSPEEDR << \
-                                     GPIO_OSPEEDR_BIT_POS(x))
+/* Mask macro of bit fields in GPIO_OSPEEDR register */
+#define MASK_OF_PIN_IN_GPIO_OSPEEDR      ((uint32_t)0x3)
+#define GPIO_OSPEEDR_BIT_MASK(pinNum)    (MASK_OF_PIN_IN_GPIO_OSPEEDR << \
+                                          GPIO_OSPEEDR_BIT_POS(pinNum))
 
-/* Position macro of bit fields in PUPDR register */
-#define NUM_BIT_PER_PIN_IN_PUPDR    2U
-#define GPIO_PUPDR_BIT_POS(x)       (NUM_BIT_PER_PIN_IN_PUPDR * (x))
+/* Position macro of bit fields in GPIO_PUPDR register */
+#define NUM_BIT_PER_PIN_IN_GPIO_PUPDR    2U
+#define GPIO_PUPDR_BIT_POS(pinNum)       (NUM_BIT_PER_PIN_IN_GPIO_PUPDR * \
+                                          (pinNum))
 
-/* Mask macro of bit fields in PUPDR register */
-#define MASK_OF_PIN_IN_PUPDR        ((uint32_t)0x3)
-#define GPIO_PUPDR_BIT_MASK(x)      (MASK_OF_PIN_IN_PUPDR << \
-                                     GPIO_PUPDR_BIT_POS(x))
+/* Mask macro of bit fields in GPIO_PUPDR register */
+#define MASK_OF_PIN_IN_GPIO_PUPDR        ((uint32_t)0x3)
+#define GPIO_PUPDR_BIT_MASK(pinNum)      (MASK_OF_PIN_IN_GPIO_PUPDR << \
+                                          GPIO_PUPDR_BIT_POS(pinNum))
 
-/* Position macro of bit fields in IDR register */
-#define NUM_BIT_PER_PIN_IN_IDR      1U
-#define GPIO_IDR_BIT_POS(x)         (NUM_BIT_PER_PIN_IN_IDR * (x))
+/* Position macro of bit fields in GPIO_IDR register */
+#define NUM_BIT_PER_PIN_IN_GPIO_IDR      1U
+#define GPIO_IDR_BIT_POS(pinNum)         (NUM_BIT_PER_PIN_IN_GPIO_IDR * \
+                                          (pinNum))
 
-/* Mask macro of bit fields in IDR register */
-#define MASK_OF_PIN_IN_IDR          ((uint32_t)0x1)
-#define GPIO_IDR_BIT_MASK(x)        (MASK_OF_PIN_IN_IDR << GPIO_IDR_BIT_POS(x))
+/* Mask macro of bit fields in GPIO_IDR register */
+#define MASK_OF_PIN_IN_GPIO_IDR          ((uint32_t)0x1)
+#define GPIO_IDR_BIT_MASK(pinNum)        (MASK_OF_PIN_IN_GPIO_IDR << \
+                                          GPIO_IDR_BIT_POS(pinNum))
 
-/* Position macro of bit fields in ODR register */
-#define NUM_BIT_PER_PIN_IN_ODR      1U
-#define GPIO_ODR_BIT_POS(x)         (NUM_BIT_PER_PIN_IN_ODR * (x))
+/* Position macro of bit fields in GPIO_ODR register */
+#define NUM_BIT_PER_PIN_IN_GPIO_ODR      1U
+#define GPIO_ODR_BIT_POS(pinNum)         (NUM_BIT_PER_PIN_IN_GPIO_ODR * \
+                                          (pinNum))
 
-/* Mask macro of bit fields in ODR register */
-#define MASK_OF_PIN_IN_ODR          ((uint32_t)0x1)
-#define GPIO_ODR_BIT_MASK(x)        (MASK_OF_PIN_IN_ODR << GPIO_ODR_BIT_POS(x))
+/* Mask macro of bit fields in GPIO_ODR register */
+#define MASK_OF_PIN_IN_GPIO_ODR          ((uint32_t)0x1)
+#define GPIO_ODR_BIT_MASK(pinNum)        (MASK_OF_PIN_IN_GPIO_ODR << \
+                                          GPIO_ODR_BIT_POS(pinNum))
 
-/* Position macro of bit fields in BSRR_BS register */
-#define NUM_BIT_PER_PIN_IN_BSRR_BS  1U
-#define GPIO_BSRR_BS_BIT_POS(x)     (NUM_BIT_PER_PIN_IN_BSRR_BS * (x))
+/* Position macro of bit fields in GPIO_BSRR_BS register */
+#define NUM_BIT_PER_PIN_IN_GPIO_BSRR_BS  1U
+#define GPIO_BSRR_BS_BIT_POS(pinNum)     (NUM_BIT_PER_PIN_IN_GPIO_BSRR_BS * \
+                                          (pinNum))
 
-/* Mask macro of bit fields in BSRR_BS register */
-#define MASK_OF_PIN_IN_BSRR_BS      ((uint32_t)0x1)
-#define GPIO_BSRR_BS_BIT_MASK(x)    (MASK_OF_PIN_IN_BSRR_BS << \
-                                     GPIO_BSRR_BS_BIT_POS(x))
+/* Mask macro of bit fields in GPIO_BSRR_BS register */
+#define MASK_OF_PIN_IN_GPIO_BSRR_BS      ((uint32_t)0x1)
+#define GPIO_BSRR_BS_BIT_MASK(pinNum)    (MASK_OF_PIN_IN_GPIO_BSRR_BS << \
+                                          GPIO_BSRR_BS_BIT_POS(pinNum))
 
-/* Position macro of bit fields in BSRR_BR register */
-#define START_POS_OF_BSRR_BR        16U
-#define NUM_BIT_PER_PIN_IN_BSRR_BR  1U
-#define GPIO_BSRR_BR_BIT_POS(x)     (START_POS_OF_BSRR_BR + \
-                                     NUM_BIT_PER_PIN_IN_BSRR_BR * (x))
+/* Position macro of bit fields in GPIO_BSRR_BR register */
+#define START_POS_OF_BSRR_BR             16U
+#define NUM_BIT_PER_PIN_IN_GPIO_BSRR_BR  1U
+#define GPIO_BSRR_BR_BIT_POS(pinNum)     (START_POS_OF_BSRR_BR + \
+                                          NUM_BIT_PER_PIN_IN_GPIO_BSRR_BR * \
+                                          (pinNum))
 
-/* Mask macro of bit fields in BSRR_BR register */
-#define MASK_OF_PIN_IN_BSRR_BR      ((uint32_t)0x1)
-#define GPIO_BSRR_BR_BIT_MASK(x)    (MASK_OF_PIN_IN_BSRR_BR << \
-                                     GPIO_BSRR_BR_BIT_POS(x))
+/* Mask macro of bit fields in GPIO_BSRR_BR register */
+#define MASK_OF_PIN_IN_GPIO_BSRR_BR      ((uint32_t)0x1)
+#define GPIO_BSRR_BR_BIT_MASK(pinNum)    (MASK_OF_PIN_IN_GPIO_BSRR_BR << \
+                                          GPIO_BSRR_BR_BIT_POS(pinNum))
 
-/* Position macro of bit fields in LCKR_LCK register */
-#define NUM_BIT_PER_PIN_IN_LCKR_LCK     1U
-#define GPIO_LCKR_LCK_BIT_POS(x)        (NUM_BIT_PER_PIN_IN_LCKR_LCK * (x))
+/* Position macro of bit fields in GPIO_LCKR_LCK register */
+#define NUM_BIT_PER_PIN_IN_GPIO_LCKR_LCK   1U
+#define GPIO_LCKR_LCK_BIT_POS(pinNum)      (NUM_BIT_PER_PIN_IN_GPIO_LCKR_LCK * \
+                                            (pinNum))
 
-/* Mask macro of bit fields in LCKR_LCK register */
-#define MASK_OF_PIN_IN_LCKR_LCK         ((uint32_t)0x1)
-#define GPIO_LCKR_LCK_BIT_MASK(x)       (MASK_OF_PIN_IN_LCKR_LCK << \
-                                         GPIO_LCKR_LCK_BIT_POS(x))
+/* Mask macro of bit fields in GPIO_LCKR_LCK register */
+#define MASK_OF_PIN_IN_GPIO_LCKR_LCK     ((uint32_t)0x1)
+#define GPIO_LCKR_LCK_BIT_MASK(pinNum)   (MASK_OF_PIN_IN_GPIO_LCKR_LCK << \
+                                          GPIO_LCKR_LCK_BIT_POS(pinNum))
 
-/* Position macro of bit fields LCKR_LCKK */
-#define GPIO_LCKR_LCKK_POS          16U
+/* Position macro of bit fields GPIO_LCKR_LCKK */
+#define GPIO_LCKR_LCKK_POS               16U
 
-/* Mask macro of bit fields LCKR_LCKK */
-#define GPIO_LCKR_LCKK_MASK         ((uint32_t)0x10000)
+/* Mask macro of bit fields GPIO_LCKR_LCKK */
+#define GPIO_LCKR_LCKK_MASK              ((uint32_t)0x10000)
 
-/* Position macro of bit fields in AFRL register */
-#define NUM_BIT_PER_PIN_IN_AFRL     4U
-#define GPIO_AFRL_BIT_POS(x)        (NUM_BIT_PER_PIN_IN_AFRL * (x))
+/* Position macro of bit fields in GPIO_AFRL register */
+#define NUM_BIT_PER_PIN_IN_GPIO_AFRL     4U
+#define GPIO_AFRL_BIT_POS(pinNum)        (NUM_BIT_PER_PIN_IN_GPIO_AFRL * \
+                                          (pinNum))
 
-/* Mask macro of bit fields in AFRL register */
-#define MASK_OF_PIN_IN_AFRL         ((uint32_t)0xF)
-#define GPIO_AFRL_BIT_MASK(x)       (MASK_OF_PIN_IN_AFRL << \
-                                     GPIO_AFRL_BIT_POS(x))
+/* Mask macro of bit fields in GPIO_AFRL register */
+#define MASK_OF_PIN_IN_GPIO_AFRL         ((uint32_t)0xF)
+#define GPIO_AFRL_BIT_MASK(pinNum)       (MASK_OF_PIN_IN_GPIO_AFRL << \
+                                          GPIO_AFRL_BIT_POS(pinNum))
 
-/* Position macro of bit fields in AFRH register */
-#define PIN_NUM_START_IN_AFRH       8U
-#define NUM_BIT_PER_PIN_IN_AFRH     4U
-#define GPIO_AFRH_BIT_POS(x)        (NUM_BIT_PER_PIN_IN_AFRL * \
-                                    ((x) - PIN_NUM_START_IN_AFRH))
+/* Position macro of bit fields in GPIO_AFRH register */
+#define PIN_NUM_START_IN_AFRH            8U
+#define NUM_BIT_PER_PIN_IN_GPIO_AFRH     4U
+#define GPIO_AFRH_BIT_POS(pinNum)        (NUM_BIT_PER_PIN_IN_GPIO_AFRL * \
+                                          ((pinNum) - PIN_NUM_START_IN_AFRH))
 
-/* Mask macro of bit fields in AFRH register */
-#define MASK_OF_PIN_IN_AFRH         ((uint32_t)0xF)
-#define GPIO_AFRH_BIT_MASK(x)       (MASK_OF_PIN_IN_AFRH << \
-                                     GPIO_AFRH_BIT_POS(x))
-
+/* Mask macro of bit fields in GPIO_AFRH register */
+#define MASK_OF_PIN_IN_GPIO_AFRH         ((uint32_t)0xF)
+#define GPIO_AFRH_BIT_MASK(pinNum)       (MASK_OF_PIN_IN_GPIO_AFRH << \
+                                          GPIO_AFRH_BIT_POS(pinNum))
 
 /*
  * RCC peripheral register structure
  */
 typedef struct
 {
-	_RW uint32_t CR;
-	_RW uint32_t PLLCFGR;
-	_RW uint32_t CFGR;
-	_RW uint32_t CIR;
-	_RW uint32_t AHB1RSTR;
-	_RW uint32_t AHB2RSTR;
-		uint32_t Reserved1[2];
-	_RW uint32_t APB1RSTR;
-	_RW uint32_t APB2RSTR;
-		uint32_t Reserved2[2];
-	_RW uint32_t AHB1ENR;
-	_RW uint32_t AHB2ENR;
-		uint32_t Reserved3[2];
-	_RW uint32_t APB1ENR;
-	_RW uint32_t APB2ENR;
-		uint32_t Reserved4[2];
-	_RW uint32_t AHB1LPENR;
-	_RW uint32_t AHB2LPENR;
-		uint32_t Reserved5[2];
-	_RW uint32_t APB1LPENR;
-	_RW uint32_t APB2LPENR;
-		uint32_t Reserved6[2];
-	_RW uint32_t BDCR;
-	_RW uint32_t CSR;
-		uint32_t Reserved7[2];
-	_RW uint32_t SSCGR;
-	_RW uint32_t PLLI2SCFGR;
-		uint32_t Reserved8;
-	_RW uint32_t DCKCFGR;
+    _RW uint32_t CR;
+    _RW uint32_t PLLCFGR;
+    _RW uint32_t CFGR;
+    _RW uint32_t CIR;
+    _RW uint32_t AHB1RSTR;
+    _RW uint32_t AHB2RSTR;
+        uint32_t Reserved1[2];
+    _RW uint32_t APB1RSTR;
+    _RW uint32_t APB2RSTR;
+        uint32_t Reserved2[2];
+    _RW uint32_t AHB1ENR;
+    _RW uint32_t AHB2ENR;
+        uint32_t Reserved3[2];
+    _RW uint32_t APB1ENR;
+    _RW uint32_t APB2ENR;
+        uint32_t Reserved4[2];
+    _RW uint32_t AHB1LPENR;
+    _RW uint32_t AHB2LPENR;
+        uint32_t Reserved5[2];
+    _RW uint32_t APB1LPENR;
+    _RW uint32_t APB2LPENR;
+        uint32_t Reserved6[2];
+    _RW uint32_t BDCR;
+    _RW uint32_t CSR;
+        uint32_t Reserved7[2];
+    _RW uint32_t SSCGR;
+    _RW uint32_t PLLI2SCFGR;
+        uint32_t Reserved8;
+    _RW uint32_t DCKCFGR;
 } Rcc_RegDef;
 
 #define RCC    ((Rcc_RegDef*)RCC_BASE)
@@ -288,43 +317,82 @@ typedef struct
  */
 typedef struct
 {
-	_RW uint32_t EXTI_IMR;
-	_RW uint32_t EXTI_EMR;
-	_RW uint32_t EXTI_RTSR;
-	_RW uint32_t EXTI_FTSR;
-	_RW uint32_t EXTI_SWIER;
-	_RW uint32_t EXTI_PR;
+    _RW uint32_t EXTI_IMR;
+    _RW uint32_t EXTI_EMR;
+    _RW uint32_t EXTI_RTSR;
+    _RW uint32_t EXTI_FTSR;
+    _RW uint32_t EXTI_SWIER;
+    _RW uint32_t EXTI_PR;
 }Exti_RegDef;
 
 #define EXTI    ((Exti_RegDef*)EXTI_BASE)
+
+/* Position macro of bit fields in EXTI_IMR register */
+#define NUM_BIT_PER_LINE_IN_EXTI_IMR   1U
+#define EXTI_IMR_BIT_POS(line)         (NUM_BIT_PER_LINE_IN_EXTI_IMR * (line))
+
+/* Mask macro of bit fields in EXTI_IMR register */
+#define MASK_OF_LINE_IN_EXTI_IMR       ((uint32_t)0x1)
+#define EXTI_IMR_BIT_MASK(line)        (MASK_OF_LINE_IN_EXTI_IMR << \
+                                        EXTI_IMR_BIT_POS(line))
+
+/* Position macro of bit fields in EXTI_EMR register */
+#define NUM_BIT_PER_LINE_IN_EXTI_EMR   1U
+#define EXTI_EMR_BIT_POS(line)         (NUM_BIT_PER_LINE_IN_EXTI_EMR * (line))
+
+/* Mask macro of bit fields in EXTI_EMR register */
+#define MASK_OF_LINE_IN_EXTI_EMR       ((uint32_t)0x1)
+#define EXTI_EMR_BIT_MASK(line)        (MASK_OF_LINE_IN_EXTI_EMR << \
+                                        EXTI_EMR_BIT_POS(line))
+
+/* Position macro of bit fields in EXTI_RTSR register */
+#define NUM_BIT_PER_LINE_IN_EXTI_RTSR  1U
+#define EXTI_RTSR_BIT_POS(line)        (NUM_BIT_PER_LINE_IN_EXTI_RTSR * (line))
+
+/* Mask macro of bit fields in EXTI_RTSR register */
+#define MASK_OF_LINE_IN_EXTI_RTSR      ((uint32_t)0x1)
+#define EXTI_RTSR_BIT_MASK(line)       (MASK_OF_LINE_IN_EXTI_RTSR << \
+                                        EXTI_RTSR_BIT_POS(line))
+
+/* Position macro of bit fields in EXTI_FTSR register */
+#define NUM_BIT_PER_LINE_IN_EXTI_FTSR  1U
+#define EXTI_FTSR_BIT_POS(line)        (NUM_BIT_PER_LINE_IN_EXTI_FTSR *(line))
+
+/* Mask macro of bit fields in EXTI_FTSR register */
+#define MASK_OF_LINE_IN_EXTI_FTSR      ((uint32_t)0x1)
+#define EXTI_FTSR_BIT_MASK(line)       (MASK_OF_LINE_IN_EXTI_FTSR << \
+                                        EXTI_FTSR_BIT_POS(line))
+
+/* Position macro of bit fields in EXTI_SWIER register */
+#define NUM_BIT_PER_LINE_IN_EXTI_SWIER 1U
+#define EXTI_SWIER_BIT_POS(line)       (NUM_BIT_PER_LINE_IN_EXTI_SWIER * (line))
+
+/* Mask macro of bit fields in EXTI_SWIER register */
+#define MASK_OF_LINE_IN_EXTI_SWIER     ((uint32_t)0x1)
+#define EXTI_SWIER_BIT_MASK(line)      (MASK_OF_LINE_IN_EXTI_SWIER << \
+                                        EXTI_SWIER_BIT_POS(line))
+
+/* Position macro of bit fields in EXTI_PR register */
+#define NUM_BIT_PER_LINE_IN_EXTI_PR    1U
+#define EXTI_PR_BIT_POS(line)          (NUM_BIT_PER_LINE_IN_EXTI_PR * (line))
+
+/* Mask macro of bit fields in EXTI_PR register */
+#define MASK_OF_LINE_IN_EXTI_PR        ((uint32_t)0x1)
+#define EXTI_PR_BIT_MASK(line)         (MASK_OF_LINE_IN_EXTI_PR << \
+                                        EXTI_PR_BIT_POS(line))
 
 /*
  * SYSCFG register structure
  */
 typedef struct
 {
-	_RW uint32_t MEMRMP;
-	_RW uint32_t PMC;
-	_RW uint32_t EXTICR[4];
-	_RW uint32_t Reserved[2];
-	_RW uint32_t CMPCR;
+    _RW uint32_t MEMRMP;
+    _RW uint32_t PMC;
+    _RW uint32_t EXTICR[4];
+    _RW uint32_t Reserved[2];
+    _RW uint32_t CMPCR;
 }Syscfg_RegDef;
 
 #define SYSCFG    ((Syscfg_RegDef*)SYSCFG_BASE)
-
-typedef enum
-{
-	IRQ_NUM_EXTI16  = 1,
-	IRQ_NUM_EXTI21  = 2,
-	IRQ_NUM_EXTI22  = 3,
-	IRQ_NUM_EXTI0   = 6,
-	IRQ_NUM_EXTI1   = 7,
-	IRQ_NUM_EXTI2   = 8,
-	IRQ_NUM_EXTI3   = 9,
-	IRQ_NUM_EXTI4   = 10,
-	IRQ_NUM_EXTI9_5 = 23,
-	IRQ_NUM_EXTI17  = 41,
-	IRQ_NUM_EXTI18  = 42
-}Irq_Number;
 
 #endif /* STM32F401RE_H */
