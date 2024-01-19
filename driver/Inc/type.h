@@ -16,6 +16,11 @@
 #define ENABLE  1
 #define DISABLE 0
 
+#define TRUE    1
+#define FALSE   0
+
+typedef unsigned char bool; 
+
 /*
  * Compiler dependent.
  * Check these data types below and change for your compiler.
