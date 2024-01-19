@@ -11,7 +11,6 @@
 #include "stm32f401re.h"
 
 /*** DEFINE ************************************/
-#define ALL_EXIT_LINE_VALID    ((uint32_t)0x0067FFFF)
 
 /*** TYPEDEF ************************************/
 /*
