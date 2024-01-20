@@ -41,11 +41,25 @@ typedef enum
     EXTI_LINE22 = 22U
 } Exti_Line_e;
 
+/*
+ * @Gpio_EIMode_e
+ *
+ */
+typedef enum
+{
+	EXTI_EDGE_FALL      = 0,
+	EXTI_EDGE_RISE      = 1,
+	EXTI_EDGE_FALLRISE  = 2,
+}Exti_Edge_e;
+
 /*** PROTOTYPE ****************************/
-void Exti_IntEnable(Exti_RegDef *p_Exti_st, Exti_Line_e LineNum_e);
-void Exti_EventEnable(Exti_RegDef *p_Exti_st, Exti_Line_e LineNum_e);
-void Exti_EdgeCfg(Exti_RegDef *p_Exti_st, Exti_Line_e LineNum_e);
-void Exti_SoftIntGenarate(Exti_RegDef *p_Exti_st, Exti_Line_e LineNum_e);
-void Exti_ClearPending(Exti_RegDef *p_Exti_st, Exti_Line_e LineNum_e);
+ReturnType Exti_IntEnable(Exti_RegDef *p_Exti_st, Exti_Line_e LineNum_e);
+ReturnType Exti_IntDisable(Exti_RegDef *p_Exti_st, Exti_Line_e LineNum_e);
+ReturnType Exti_EventEnable(Exti_RegDef *p_Exti_st, Exti_Line_e LineNum_e);
+ReturnType Exti_EventDisable(Exti_RegDef *p_Exti_st, Exti_Line_e LineNum_e);
+ReturnType Exti_EdgeCfg(Exti_RegDef *p_Exti_st, Exti_Line_e LineNum_e, \
+                        Exti_Edge_e EdgeCfg_e);
+ReturnType Exti_SoftIntGenarate(Exti_RegDef *p_Exti_st, Exti_Line_e LineNum_e);
+ReturnType Exti_ClearPending(Exti_RegDef *p_Exti_st, Exti_Line_e LineNum_e);
 
 #endif /* EXTERNAL_INTERRUPT_H */

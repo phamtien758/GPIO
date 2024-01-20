@@ -19,7 +19,11 @@
 #define TRUE    1
 #define FALSE   0
 
-typedef unsigned char boolean; 
+typedef enum
+{
+    RET_NOT_OK = 0,
+    RET_OK     = 1
+}ReturnType; 
 
 /*
  * Compiler dependent.

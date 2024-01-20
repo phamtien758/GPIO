@@ -31,18 +31,6 @@ typedef enum
 }Gpio_Mode;
 
 /*
- * @Gpio_EIMode_e
- *
- */
-typedef enum
-{
-	GPIO_MODE_EIR_FE   = 0,
-	GPIO_MODE_EIR_RE   = 1,
-	GPIO_MODE_EIR_FRE  = 2,
-	GPIO_MODE_EIR_OFF  = 3
-}Gpio_EIMode_e;
-
-/*
  * @Gpio_OutType_e
  *
  */
