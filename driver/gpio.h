@@ -118,7 +118,6 @@ typedef struct
 	Gpio_PullUpDown  Gpio_PinPuPd_e;
 	Gpio_OutType     Gpio_PinOutType_e;
 	Gpio_AltFun      Gpio_PinAltFun_e;
-	Gpio_EIMode_e    Gpio_PinEIMode_e;
 }Gpio_Config;
 
 void   Gpio_Init(Gpio_RegDef *p_Gpio_st, const Gpio_Config *p_GpioCfg_st);
