@@ -1,95 +1,187 @@
-/*
- * File: gpio.c
- * Author: phamtien758
- * 
- */
+/*******************************************************************************
+ * File  : gpio.c       
+ * Author: phamtien758      
+ * Brief : The Gpio source file
+ ******************************************************************************/
 
 /*** INCLUDE ************************************/
+
 #include "gpio.h"
 #include "stub.h"
 
-/*** PROTOTYPE **********************************/
+/*** DEFINE *******************************************************************/
 
-/*** VARIABLE ***********************************/
+/*** VARIABLES ****************************************************************/
 
-/*** STATIC FUNCTION ****************************/
+/*** PROTOTYPE ****************************************************************/
 
-/*** FUNCTIONS **********************************/
-void Gpio_Init(Gpio_RegDef *p_Gpio_st, const Gpio_Config *p_GpioCfg_st)
+/*** STATIC FUNCTION **********************************************************/
+
+/*** FUNCTIONS ****************************************************************/
+
+/**
+  * @brief   Gpio pin initialization
+  * @note    None
+  * @param   p_Gpio_st    Pointer to GPIOx address.
+  * @param   p_GpioCfg_st Pointer to a structure that contains the configuration
+  *                       information for the specified pin.
+  * @retval  RET_OK - Pin has initialized success
+  *          RET_NOT_OK - Pin has initialized fail
+  */ 
+ReturnType Gpio_Init(Gpio_RegDef *p_Gpio_st, const Gpio_Config *p_GpioCfg_st)
 {
     uint32_t TempValue_u32;
-    uint8_t Temp_u8;
-    uint8_t Pos_u8;
+    ReturnType RetValue = RET_OK;
+    Exti_Line_e Line_e;
 
-    /* Pin mode Configuration */
-    TempValue_u32 = p_GpioCfg_st->Gpio_PinMode_e << \
-                    GPIO_MODER_BIT_POS(p_GpioCfg_st->Gpio_PinNum_e);
-    /* Because number of bit is larger than 1, so need to clear before write */
-    p_Gpio_st->MODER &= ~GPIO_MODER_BIT_MASK(p_GpioCfg_st->Gpio_PinNum_e);
-    p_Gpio_st->MODER |= TempValue_u32;
-
-    /* Pin output type Configuration */
-    TempValue_u32 = p_GpioCfg_st->Gpio_PinOutType_e << \
-                    GPIO_MODER_BIT_POS(p_GpioCfg_st->Gpio_PinNum_e);
-    p_Gpio_st->OTYPER |= TempValue_u32;
-
-    /* Pin output speed configuration */
-    TempValue_u32 = p_GpioCfg_st->Gpio_PinSpeed_e << \
-                    GPIO_MODER_BIT_POS(p_GpioCfg_st->Gpio_PinNum_e);
-    /* Because number of bit is larger than 1, so need to clear before write */
-    p_Gpio_st->OSPEEDR &= ~GPIO_MODER_BIT_MASK(p_GpioCfg_st->Gpio_PinNum_e);
-    p_Gpio_st->OSPEEDR |= TempValue_u32;
-
-    /* Pin pull-up pull-down configuration */
-    TempValue_u32 = p_GpioCfg_st->Gpio_PinPuPd_e << \
-                    GPIO_MODER_BIT_POS(p_GpioCfg_st->Gpio_PinNum_e);
-    /* Because number of bit is larger than 1, so need to clear before write */
-    p_Gpio_st->PUPDR &= ~GPIO_MODER_BIT_MASK(p_GpioCfg_st->Gpio_PinNum_e);
-    p_Gpio_st->PUPDR |= TempValue_u32;
-
-    /* Pin alternate function configuration */
-    /* Because each pin consume 4 bits in AFR register,
-       so from Pin number 8 onward, configuration value will be write to AFRH */
-    if(GPIO_PINNUM_8 <= p_GpioCfg_st->Gpio_PinNum_e)
+    if(FALSE == Gpio_IsLocked(p_Gpio_st, p_GpioCfg_st->Gpio_PinNum_e))
     {
-        TempValue_u32 = p_GpioCfg_st->Gpio_PinAltFun_e << \
-                        GPIO_AFRH_BIT_POS(p_GpioCfg_st->Gpio_PinNum_e);
+        /* Pin mode Configuration */
+        TempValue_u32 = p_GpioCfg_st->Gpio_PinMode_e << \
+                        GPIO_MODER_BIT_POS(p_GpioCfg_st->Gpio_PinNum_e);
         /* Because number of bit is larger than 1,
            so need to clear before write */
-        p_Gpio_st->AFRH &= ~GPIO_AFRH_BIT_MASK(p_GpioCfg_st->Gpio_PinNum_e);
-        p_Gpio_st->AFRH |= TempValue_u32;
+        p_Gpio_st->MODER &= ~GPIO_MODER_BIT_MASK(p_GpioCfg_st->Gpio_PinNum_e);
+        p_Gpio_st->MODER |= TempValue_u32;
+
+        /* Pin output type Configuration */
+        TempValue_u32 = p_GpioCfg_st->Gpio_PinOutType_e << \
+                        GPIO_MODER_BIT_POS(p_GpioCfg_st->Gpio_PinNum_e);
+        p_Gpio_st->OTYPER |= TempValue_u32;
+
+        /* Pin output speed configuration */
+        TempValue_u32 = p_GpioCfg_st->Gpio_PinSpeed_e << \
+                        GPIO_MODER_BIT_POS(p_GpioCfg_st->Gpio_PinNum_e);
+        /* Because number of bit is larger than 1,
+           so need to clear before write */
+        p_Gpio_st->OSPEEDR &= ~GPIO_MODER_BIT_MASK(p_GpioCfg_st->Gpio_PinNum_e);
+        p_Gpio_st->OSPEEDR |= TempValue_u32;
+
+        /* Pin pull-up pull-down configuration */
+        TempValue_u32 = p_GpioCfg_st->Gpio_PinPuPd_e << \
+                        GPIO_MODER_BIT_POS(p_GpioCfg_st->Gpio_PinNum_e);
+        /* Because number of bit is larger than 1, 
+           so need to clear before write */
+        p_Gpio_st->PUPDR &= ~GPIO_MODER_BIT_MASK(p_GpioCfg_st->Gpio_PinNum_e);
+        p_Gpio_st->PUPDR |= TempValue_u32;
+
+        /* Pin alternate function configuration */
+        /* Because each pin consume 4 bits in AFR register,
+           so from Pin number 8 onward, 
+           configuration value will be write to AFRH */
+        if(GPIO_PINNUM_8 <= p_GpioCfg_st->Gpio_PinNum_e)
+        {
+            TempValue_u32 = p_GpioCfg_st->Gpio_PinAltFun_e << \
+                            GPIO_AFRH_BIT_POS(p_GpioCfg_st->Gpio_PinNum_e);
+            /* Because number of bit is larger than 1,
+                so need to clear before write */
+            p_Gpio_st->AFRH &= ~GPIO_AFRH_BIT_MASK(p_GpioCfg_st->Gpio_PinNum_e);
+            p_Gpio_st->AFRH |= TempValue_u32;
+        }
+        else
+        {
+            TempValue_u32 = p_GpioCfg_st->Gpio_PinAltFun_e << \
+                            GPIO_AFRL_BIT_POS(p_GpioCfg_st->Gpio_PinNum_e);
+            /* Because number of bit is larger than 1,
+                so need to clear before write */
+            p_Gpio_st->AFRL &= ~GPIO_AFRL_BIT_MASK(p_GpioCfg_st->Gpio_PinNum_e);
+            p_Gpio_st->AFRL |= TempValue_u32;
+        }
+
+        /* External interrupt configuration */
+        if((GPIO_MODE_IN == p_GpioCfg_st->Gpio_PinMode_e) && \
+            (ENABLE == (p_GpioCfg_st->Gpio_ExIntEnable_u8)))
+        {
+            Line_e = (Exti_Line_e)(p_GpioCfg_st->Gpio_PinNum_e);
+            Exti_IntEnable(Line_e, p_GpioCfg_st->Gpio_ExIntCallback);
+            Exti_EdgeCfg(Line_e, p_GpioCfg_st->Gpio_ExIntEdge_e);
+        }
+        else
+        {
+            RetValue = RET_NOT_OK;
+        }
     }
     else
     {
-        TempValue_u32 = p_GpioCfg_st->Gpio_PinAltFun_e << \
-                        GPIO_AFRL_BIT_POS(p_GpioCfg_st->Gpio_PinNum_e);
-        /* Because number of bit is larger than 1,
-           so need to clear before write */
-        p_Gpio_st->AFRL &= ~GPIO_AFRL_BIT_MASK(p_GpioCfg_st->Gpio_PinNum_e);
-        p_Gpio_st->AFRL |= TempValue_u32;
+        RetValue = RET_NOT_OK;
     }
+
+    return RetValue;
 }
 
-uint8_t Gpio_ReadPin(const Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8)
+/**
+  * @brief   Read data from pin in input mode
+  * @note    None
+  * @param   p_Gpio_st   Pointer to GPIOx address.
+  * @param   PinNum_e    Gpio pin number. It is Gpio_PinNum enum type.
+  *                      This parameter can be one of following values:
+  *         @arg GPIO_PINNUM_0
+  *         @arg GPIO_PINNUM_1
+  *         @arg GPIO_PINNUM_2
+  *         @arg GPIO_PINNUM_3
+  *         @arg GPIO_PINNUM_4
+  *         @arg GPIO_PINNUM_5
+  *         @arg GPIO_PINNUM_6
+  *         @arg GPIO_PINNUM_7
+  *         @arg GPIO_PINNUM_8
+  *         @arg GPIO_PINNUM_9
+  *         @arg GPIO_PINNUM_10
+  *         @arg GPIO_PINNUM_11
+  *         @arg GPIO_PINNUM_12
+  *         @arg GPIO_PINNUM_13
+  *         @arg GPIO_PINNUM_14
+  *         @arg GPIO_PINNUM_15
+  * @retval  0 - Pin is low level
+  *          1 - Pin is high level
+  */ 
+uint8_t Gpio_ReadPin(const Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_e)
 {
     uint8_t Value_u8;
-    Value_u8 = (uint8_t)(((p_Gpio_st->IDR) >> GPIO_IDR_BIT_POS(PinNum_u8) & \
+    Value_u8 = (uint8_t)(((p_Gpio_st->IDR) >> GPIO_IDR_BIT_POS(PinNum_e) & \
                            MASK_OF_PIN_IN_GPIO_IDR));
 
     return Value_u8;
 }
 
+/**
+  * @brief   Write data to pin that is output mode
+  * @note    None
+  * @param   p_Gpio_st    Pointer to GPIOx address.
+  * @param   PinNum_e    Gpio pin number. It is Gpio_PinNum enum type.
+  *                      This parameter can be one of following values:
+  *         @arg GPIO_PINNUM_0
+  *         @arg GPIO_PINNUM_1
+  *         @arg GPIO_PINNUM_2
+  *         @arg GPIO_PINNUM_3
+  *         @arg GPIO_PINNUM_4
+  *         @arg GPIO_PINNUM_5
+  *         @arg GPIO_PINNUM_6
+  *         @arg GPIO_PINNUM_7
+  *         @arg GPIO_PINNUM_8
+  *         @arg GPIO_PINNUM_9
+  *         @arg GPIO_PINNUM_10
+  *         @arg GPIO_PINNUM_11
+  *         @arg GPIO_PINNUM_12
+  *         @arg GPIO_PINNUM_13
+  *         @arg GPIO_PINNUM_14
+  *         @arg GPIO_PINNUM_15
+  * @param   Value_u8   Data that writes to pin. It is Gpio_PinState enum type.
+  *                     This parameter can be one of following values:
+  *         @arg GPIO_RESET    Write 0 to output pin
+  *         @arg GPIO_SET      Write 1 to output pin
+  * @retval  None
+  */
 void Gpio_WritePin(Gpio_RegDef *p_Gpio_st,
-                     Gpio_PinNum PinNum_u8,
-                     Gpio_PinState Value_u8)
+                   Gpio_PinNum PinNum_e,
+                   Gpio_PinState Value_u8)
 {
     if(GPIO_RESET == Value_u8)
     {
-        p_Gpio_st->BSRR = GPIO_BSRR_BR_BIT_MASK(PinNum_u8);
+        p_Gpio_st->BSRR = GPIO_BSRR_BR_BIT_MASK(PinNum_e);
     }
     else if (GPIO_SET == Value_u8)
     {
-        p_Gpio_st->BSRR = GPIO_BSRR_BS_BIT_MASK(PinNum_u8);
+        p_Gpio_st->BSRR = GPIO_BSRR_BS_BIT_MASK(PinNum_e);
     }
     else
     {
@@ -97,73 +189,127 @@ void Gpio_WritePin(Gpio_RegDef *p_Gpio_st,
     }
 }
 
-void Gpio_TogglePin(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8)
+/**
+  * @brief   Toggle pin that is output mode
+  * @note    None
+  * @param   p_Gpio_st   Pointer to GPIOx address.
+  * @param   PinNum_e    Gpio pin number. It is Gpio_PinNum enum type.
+  *                      This parameter can be one of following values:
+  *         @arg GPIO_PINNUM_0
+  *         @arg GPIO_PINNUM_1
+  *         @arg GPIO_PINNUM_2
+  *         @arg GPIO_PINNUM_3
+  *         @arg GPIO_PINNUM_4
+  *         @arg GPIO_PINNUM_5
+  *         @arg GPIO_PINNUM_6
+  *         @arg GPIO_PINNUM_7
+  *         @arg GPIO_PINNUM_8
+  *         @arg GPIO_PINNUM_9
+  *         @arg GPIO_PINNUM_10
+  *         @arg GPIO_PINNUM_11
+  *         @arg GPIO_PINNUM_12
+  *         @arg GPIO_PINNUM_13
+  *         @arg GPIO_PINNUM_14
+  *         @arg GPIO_PINNUM_15
+  * @retval  None
+  */
+void Gpio_TogglePin(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_e)
 {
-    if(p_Gpio_st->ODR & GPIO_ODR_BIT_MASK(PinNum_u8))
+    if(p_Gpio_st->ODR & GPIO_ODR_BIT_MASK(PinNum_e))
     {
-        p_Gpio_st->BSRR = GPIO_BSRR_BR_BIT_MASK(PinNum_u8);
+        p_Gpio_st->BSRR = GPIO_BSRR_BR_BIT_MASK(PinNum_e);
     }
     else
     {
-        p_Gpio_st->BSRR = GPIO_BSRR_BS_BIT_MASK(PinNum_u8);
+        p_Gpio_st->BSRR = GPIO_BSRR_BS_BIT_MASK(PinNum_e);
     }
 }
-void Gpio_IrqConfig(Irq_Number IrqNum_u8, uint8_t Pri_u8, uint8_t State_u8)
+
+/**
+  * @brief   Check the pin that locked or not
+  * @note    None
+  * @param   p_Gpio_st   Pointer to GPIOx address.
+  * @param   PinNum_e    Gpio pin number. It is Gpio_PinNum enum type.
+  *                      This parameter can be one of following values:
+  *         @arg GPIO_PINNUM_0
+  *         @arg GPIO_PINNUM_1
+  *         @arg GPIO_PINNUM_2
+  *         @arg GPIO_PINNUM_3
+  *         @arg GPIO_PINNUM_4
+  *         @arg GPIO_PINNUM_5
+  *         @arg GPIO_PINNUM_6
+  *         @arg GPIO_PINNUM_7
+  *         @arg GPIO_PINNUM_8
+  *         @arg GPIO_PINNUM_9
+  *         @arg GPIO_PINNUM_10
+  *         @arg GPIO_PINNUM_11
+  *         @arg GPIO_PINNUM_12
+  *         @arg GPIO_PINNUM_13
+  *         @arg GPIO_PINNUM_14
+  *         @arg GPIO_PINNUM_15
+  * @retval  TRUE - Pin locked
+  *          FALSE - Pin didn't locked
+  */
+uint8_t Gpio_IsLocked(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8)
 {
-    uint8_t IprRegister_u8;
-    uint8_t Pos_u8;
-
-    /* Set priority */
-    IprRegister_u8 = IrqNum_u8 / 4;
-    Pos_u8 = (8 * (IrqNum_u8 % 4)) + (8 - NVIC_IPR_LOW_BIT_UNUSED);
-
-    *(NVIC_IPR + IprRegister_u8) |= (Pri_u8 << Pos_u8);
-
-    /* Enable interrupt corresponding to IRQ number */
-    if(ENABLE == State_u8)
+    uint8_t RetValue_u8;
+    if((0 != (p_Gpio_st->LCKR & GPIO_LCKR_LCKK_MASK)) && \
+       (0 != (p_Gpio_st->LCKR & GPIO_LCKR_LCK_BIT_MASK(PinNum_u8))))
     {
-        if(31 >= IrqNum_u8)
-        {
-            *NVIC_ISER0 |= (1 << IrqNum_u8);
-        }
-        else if((32 <= IrqNum_u8) && (63 >= IrqNum_u8))
-        {
-            *NVIC_ISER1 |= (1 << (IrqNum_u8 % 32));
-        }
-        else if((64 <= IrqNum_u8) && (95 >= IrqNum_u8))
-        {
-            *NVIC_ISER2 |= (1 << (IrqNum_u8 % 64));
-        }
-        else
-        {
-            /* Do nothing */
-        }
+        RetValue_u8 = TRUE;
     }
-    else if(DISABLE == State_u8)
+    else
     {
-        if(31 >= IrqNum_u8)
-        {
-            *NVIC_ICER0 |= (1 << IrqNum_u8);
-        }
-        else if((32 <= IrqNum_u8) && (63 >= IrqNum_u8))
-        {
-            *NVIC_ICER1 |= (1 << (IrqNum_u8 % 32));
-        }
-        else if((64 <= IrqNum_u8) && (95 >= IrqNum_u8))
-        {
-            *NVIC_ICER2 |= (1 << (IrqNum_u8 % 64));
-        }
-        else
-        {
-            /* Do nothing */
-        }
+        RetValue_u8 = FALSE;
     }
+
+    return RetValue_u8;
 }
-void Gpio_IrqHandler(Gpio_PinNum PinNum_u8)
+
+/**
+  * @brief   Lock pin configuration,
+  *          so unwanted changes to GPIO pin configuration can be avoid.
+  * @note    None
+  * @param   p_Gpio_st   Pointer to GPIOx address.
+  * @param   PinNum_e    Gpio pin number. It is Gpio_PinNum enum type.
+  *                      This parameter can be one of following values:
+  *         @arg GPIO_PINNUM_0
+  *         @arg GPIO_PINNUM_1
+  *         @arg GPIO_PINNUM_2
+  *         @arg GPIO_PINNUM_3
+  *         @arg GPIO_PINNUM_4
+  *         @arg GPIO_PINNUM_5
+  *         @arg GPIO_PINNUM_6
+  *         @arg GPIO_PINNUM_7
+  *         @arg GPIO_PINNUM_8
+  *         @arg GPIO_PINNUM_9
+  *         @arg GPIO_PINNUM_10
+  *         @arg GPIO_PINNUM_11
+  *         @arg GPIO_PINNUM_12
+  *         @arg GPIO_PINNUM_13
+  *         @arg GPIO_PINNUM_14
+  *         @arg GPIO_PINNUM_15
+  * @retval  RET_OK - Pin has locked success
+  *          RET_NOT_OK - Pin has locked fail
+  */
+ReturnType Gpio_PinCfgLock(Gpio_RegDef *p_Gpio_st, uint32_t PinsToLock_u32)
 {
-    if((EXTI->EXTI_PR) & (1 << PinNum_u8))
+    ReturnType RetValue = RET_OK;
+    uint32_t Value_u32 = PinsToLock_u32;
+
+    /* Lock write sequence */
+    p_Gpio_st->LCKR = (GPIO_LCKR_LCKK_MASK | PinsToLock_u32);
+    p_Gpio_st->LCKR = PinsToLock_u32;
+    p_Gpio_st->LCKR = (GPIO_LCKR_LCKK_MASK | PinsToLock_u32);
+
+    if(0 == (p_Gpio_st->LCKR & GPIO_LCKR_LCKK_MASK))
     {
-        /* Clear bit pending */
-        EXTI->EXTI_PR |= (1 << PinNum_u8);
+        RetValue = RET_NOT_OK;
     }
+    else
+    {
+        /* do nothing */
+    }
+
+    return RetValue;
 }
