@@ -295,14 +295,15 @@ uint8_t Gpio_IsLocked(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8)
 ReturnType Gpio_PinCfgLock(Gpio_RegDef *p_Gpio_st, uint32_t PinsToLock_u32)
 {
     ReturnType RetValue = RET_OK;
-    uint32_t Value_u32 = PinsToLock_u32;
+    uint32_t Value_u32 = 0;
 
     /* Lock write sequence */
     p_Gpio_st->LCKR = (GPIO_LCKR_LCKK_MASK | PinsToLock_u32);
     p_Gpio_st->LCKR = PinsToLock_u32;
     p_Gpio_st->LCKR = (GPIO_LCKR_LCKK_MASK | PinsToLock_u32);
 
-    if(0 == (p_Gpio_st->LCKR & GPIO_LCKR_LCKK_MASK))
+    Value_u32 = p_Gpio_st->LCKR;
+    if(0U == (Value_u32 & GPIO_LCKR_LCKK_MASK))
     {
         RetValue = RET_NOT_OK;
     }

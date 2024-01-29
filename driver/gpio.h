@@ -14,6 +14,8 @@
 
 /*** DEFINE *******************************************************************/
 
+#define LOCK_PIN_0    GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_0)
+
 /*** TYPEDEF ******************************************************************/
 
 /*
@@ -132,7 +134,7 @@ typedef struct
     Gpio_AltFun      Gpio_PinAltFun_e;     /* Refer to @Gpio_AltFun */
     uint8_t          Gpio_ExIntEnable_u8;  /* External interrupt for Gpio pin */
     Exti_Edge_e      Gpio_ExIntEdge_e;     /* Edge for external interrupt */
-    FuncHandler      Gpio_ExIntCallback;   /* Poiter to user's handler */
+    FuncHandler      Gpio_ExIntCallback;   /* Pointer to user's handler */
 }Gpio_Config;
 
 /*** EXTERN *******************************************************************/
@@ -156,6 +158,6 @@ void Gpio_TogglePin(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8);
 uint8_t Gpio_IsLocked(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8);
 
 /* Gpio lock configuration pin */
-void Gpio_PinCfgLock(Gpio_RegDef *p_Gpio_st, uint32_t PinsToLock_u32);
+ReturnType Gpio_PinCfgLock(Gpio_RegDef *p_Gpio_st, uint32_t PinsToLock_u32);
 
 #endif /* GPIO_H */
