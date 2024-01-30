@@ -89,16 +89,22 @@ ReturnType Gpio_Init(Gpio_RegDef *p_Gpio_st, const Gpio_Config *p_GpioCfg_st)
         }
 
         /* External interrupt configuration */
-        if((GPIO_MODE_IN == p_GpioCfg_st->Gpio_PinMode_e) && \
-            (ENABLE == (p_GpioCfg_st->Gpio_ExIntEnable_u8)))
+        if(ENABLE == (p_GpioCfg_st->Gpio_ExIntEnable_u8))
         {
-            Line_e = (Exti_Line_e)(p_GpioCfg_st->Gpio_PinNum_e);
-            Exti_IntEnable(Line_e, p_GpioCfg_st->Gpio_ExIntCallback);
-            Exti_EdgeCfg(Line_e, p_GpioCfg_st->Gpio_ExIntEdge_e);
+            if(GPIO_MODE_IN == p_GpioCfg_st->Gpio_PinMode_e)
+            {
+                Line_e = (Exti_Line_e)(p_GpioCfg_st->Gpio_PinNum_e);
+                Exti_IntEnable(Line_e, p_GpioCfg_st->Gpio_ExIntCallback);
+                Exti_EdgeCfg(Line_e, p_GpioCfg_st->Gpio_ExIntEdge_e);
+            }
+            else
+            {
+                RetValue = RET_NOT_OK;
+            }
         }
         else
         {
-            RetValue = RET_NOT_OK;
+            /* do nothing */
         }
     }
     else
@@ -295,15 +301,15 @@ uint8_t Gpio_IsLocked(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8)
 ReturnType Gpio_PinCfgLock(Gpio_RegDef *p_Gpio_st, uint32_t PinsToLock_u32)
 {
     ReturnType RetValue = RET_OK;
-    uint32_t Value_u32 = 0;
 
     /* Lock write sequence */
     p_Gpio_st->LCKR = (GPIO_LCKR_LCKK_MASK | PinsToLock_u32);
     p_Gpio_st->LCKR = PinsToLock_u32;
     p_Gpio_st->LCKR = (GPIO_LCKR_LCKK_MASK | PinsToLock_u32);
 
-    Value_u32 = p_Gpio_st->LCKR;
-    if(0U == (Value_u32 & GPIO_LCKR_LCKK_MASK))
+    /* Read first time to make LCKR stable */
+    (void)(p_Gpio_st->LCKR);
+    if(0U == (p_Gpio_st->LCKR & GPIO_LCKR_LCKK_MASK))
     {
         RetValue = RET_NOT_OK;
     }

@@ -15,6 +15,7 @@
 /*** DEFINE *******************************************************************/
 
 #define LOCK_PIN_0    GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_0)
+#define LOCK_PIN_5    GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_5)
 
 /*** TYPEDEF ******************************************************************/
 

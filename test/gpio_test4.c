@@ -32,11 +32,21 @@ int main(void)
 
     RCC_GPIOA_CLK_EN();
     RCC_GPIOC_CLK_EN();
-    Gpio_Init(GPIOA, &Config1);
-    retValue = Gpio_PinCfgLock(GPIOA, LOCK_PIN_0);
-    //retValue = Gpio_Init(GPIOA, &Config1);
 
-    while(1);
+    /* 1. Check whether PA_5 locked or didn't locked. Expect: FALSE */
+    temp = Gpio_IsLocked(GPIOA, GPIO_PINNUM_5);
+
+    /* 2. Pin initialize. Expect: RET_OK */
+    retValue = Gpio_Init(GPIOA, &Config1);
+    
+    /* 3. Lock configuration of the pin. Expect: RET_OK */
+    retValue = Gpio_PinCfgLock(GPIOA, LOCK_PIN_5);
+
+    /* 4. Check if PA_5 locked or didn't locked. Expect: TRUE */
+    temp = Gpio_IsLocked(GPIOA, GPIO_PINNUM_5);
+
+    /* 5. Pin initialize one more time. Expect: RET_NOT_OK */
+    retValue = Gpio_Init(GPIOA, &Config1);
 
     return 0;
 }
