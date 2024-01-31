@@ -7,7 +7,6 @@
 /*** INCLUDE ************************************/
 
 #include "gpio.h"
-#include "stub.h"
 
 /*** DEFINE *******************************************************************/
 
@@ -93,8 +92,14 @@ ReturnType Gpio_Init(Gpio_RegDef *p_Gpio_st, const Gpio_Config *p_GpioCfg_st)
         {
             if(GPIO_MODE_IN == p_GpioCfg_st->Gpio_PinMode_e)
             {
+                /* Type casting */
                 Line_e = (Exti_Line_e)(p_GpioCfg_st->Gpio_PinNum_e);
+
+                /* Enable Exti line corresponds to pin.
+                   Function handler initialize */
                 Exti_IntEnable(Line_e, p_GpioCfg_st->Gpio_ExIntCallback);
+
+                /* Choose Edge detected */
                 Exti_EdgeCfg(Line_e, p_GpioCfg_st->Gpio_ExIntEdge_e);
             }
             else
