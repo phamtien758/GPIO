@@ -29,6 +29,7 @@ int main(void)
 {
     ReturnType retValue;
     uint8_t temp;
+    uint32_t pinlock_u32;
 
     RCC_GPIOA_CLK_EN();
     RCC_GPIOC_CLK_EN();
@@ -39,11 +40,13 @@ int main(void)
     /* 2. Pin initialize. Expect: RET_OK */
     retValue = Gpio_Init(GPIOA, &Config1);
     
+    pinlock_u32 = (LOCK_PIN_5 | LOCK_PIN_4);
     /* 3. Lock configuration of the pin. Expect: RET_OK */
-    retValue = Gpio_PinCfgLock(GPIOA, LOCK_PIN_5);
+    retValue = Gpio_PinCfgLock(GPIOA, pinlock_u32);
 
-    /* 4. Check if PA_5 locked or didn't locked. Expect: TRUE */
+    /* 4. Check if PA_5 and PA_4 locked or didn't locked. Expect: TRUE */
     temp = Gpio_IsLocked(GPIOA, GPIO_PINNUM_5);
+    temp = Gpio_IsLocked(GPIOA, GPIO_PINNUM_4);
 
     /* 5. Pin initialize one more time. Expect: RET_NOT_OK */
     retValue = Gpio_Init(GPIOA, &Config1);

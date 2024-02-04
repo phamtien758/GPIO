@@ -314,7 +314,7 @@ ReturnType Gpio_PinCfgLock(Gpio_RegDef *p_Gpio_st, uint32_t PinsToLock_u32)
 
     /* Read first time to make LCKR stable */
     (void)(p_Gpio_st->LCKR);
-    if(0U == (p_Gpio_st->LCKR & GPIO_LCKR_LCKK_MASK))
+    if((GPIO_LCKR_LCKK_MASK | PinsToLock_u32) != (p_Gpio_st->LCKR))
     {
         RetValue = RET_NOT_OK;
     }

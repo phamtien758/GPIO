@@ -14,8 +14,29 @@
 
 /*** DEFINE *******************************************************************/
 
-#define LOCK_PIN_0    GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_0)
-#define LOCK_PIN_5    GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_5)
+#define LOCK_PIN_0     GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_0)
+#define LOCK_PIN_1     GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_1)
+#define LOCK_PIN_2     GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_2)
+#define LOCK_PIN_3     GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_3)
+#define LOCK_PIN_4     GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_4)
+#define LOCK_PIN_5     GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_5)
+#define LOCK_PIN_6     GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_6)
+#define LOCK_PIN_7     GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_7)
+#define LOCK_PIN_8     GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_8)
+#define LOCK_PIN_9     GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_9)
+#define LOCK_PIN_10    GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_10)
+#define LOCK_PIN_11    GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_11)
+#define LOCK_PIN_12    GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_12)
+#define LOCK_PIN_13    GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_13)
+#define LOCK_PIN_14    GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_14)
+#define LOCK_PIN_15    GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_15)
+
+#define LOCK_PIN_ALL   ((uint32_t)(LOCK_PIN_0 | LOCK_PIN_1 | LOCK_PIN_2 | \
+                                   LOCK_PIN_3 | LOCK_PIN_4 | LOCK_PIN_5 | \
+                                   LOCK_PIN_6 | LOCK_PIN_7 | LOCK_PIN_8 | \
+                                   LOCK_PIN_9 | LOCK_PIN_10 | LOCK_PIN_11 | \
+                                   LOCK_PIN_12 | LOCK_PIN_13 | LOCK_PIN_14 | \
+                                   LOCK_PIN_15))
 
 /*** TYPEDEF ******************************************************************/
 
