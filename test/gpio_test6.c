@@ -1,7 +1,7 @@
 /*******************************************************************************
- * File  : gpio_test5.c       
+ * File  : gpio_test6.c       
  * Author: phamtien758      
- * Brief : Test two external interrupt in same EXTI15_10 Irq
+ * Brief : Test two external interrupt in EXTI15_10 and EXTI1
  ******************************************************************************/
 
 #include "gpio.h"
@@ -43,7 +43,7 @@ Gpio_Config ConfigButton1 =
 
 Gpio_Config ConfigButton2 = 
 {
-    .Gpio_PinNum_e       = GPIO_PINNUM_10,     /* Button on PC_10 pin */
+    .Gpio_PinNum_e       = GPIO_PINNUM_1,     /* Button on PB_1 pin */
     .Gpio_PinMode_e      = GPIO_MODE_IN,
     .Gpio_PinSpeed_e     = GPIO_OUTSPEED_LOW,
     .Gpio_PinPuPd_e      = GPIO_PULLUPDOWN_PULLUP, /* Choose no register because used external register */
@@ -58,10 +58,12 @@ int main(void)
 {
     RCC_GPIOA_CLK_EN();
     RCC_GPIOC_CLK_EN();
+    RCC_GPIOB_CLK_EN();
     RCC_SYSCFG_CLK_EN();
 
     Nvic_EnableIrq(IRQ_NUM_EXTI15_10);
-    Sys_ExIntCfg(SYS_EXTI10, SYS_PORTC);
+    Nvic_EnableIrq(IRQ_NUM_EXTI1);
+    Sys_ExIntCfg(SYS_EXTI1, SYS_PORTB);
     Sys_ExIntCfg(SYS_EXTI13, SYS_PORTC);
     
     Gpio_Init(GPIOA, &ConfigLed);
@@ -79,7 +81,7 @@ void Button_Handler(Gpio_PinNum LineNum_e)
     {
         Gpio_WritePin(GPIOA, GPIO_PINNUM_5, GPIO_SET);
     }
-    else if (GPIO_PINNUM_10 == LineNum_e)
+    else if (GPIO_PINNUM_1 == LineNum_e)
     {
         Gpio_WritePin(GPIOA, GPIO_PINNUM_5, GPIO_RESET);
     }

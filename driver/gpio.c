@@ -12,9 +12,39 @@
 
 /*** VARIABLES ****************************************************************/
 
+/*
+ * @brief Point to user's handler
+ */
+static GpioFuncHandler p_GpioHandler = NULL;
+
 /*** PROTOTYPE ****************************************************************/
 
+static void Gpio_ExtInit(Gpio_PinNum PinNum_e, Gpio_ExtEdge ExtEdge_e, \
+                         GpioFuncHandler p_Handler);
+
 /*** STATIC FUNCTION **********************************************************/
+
+/**
+  * @brief   Initialize external interrupt for gpio pin
+  * @param   PinNum_e    Gpio pin number. It is Gpio_PinNum enum type.
+  * @param   ExtEdge_e   Trigger edge for external interrupt.
+  * @param   p_Handler   Function pointer pointer to user's handler function
+  * @retval  None
+  */
+static void Gpio_ExtInit(Gpio_PinNum PinNum_e, Gpio_ExtEdge ExtEdge_e, \
+                         GpioFuncHandler p_Handler)
+{
+    Exti_Line Line_e = (Exti_Line)PinNum_e;
+    Exti_Edge Edge_e = (Exti_Edge)ExtEdge_e;
+
+    /* Enable Exti line corresponds to pin.
+       Function handler initialize */
+    Exti_IntEnable(Line_e, Gpio_ExtHandler);
+    p_GpioHandler = p_Handler;
+
+    /* Choose Edge detected */
+    Exti_EdgeCfg(Line_e, Edge_e);
+}
 
 /*** FUNCTIONS ****************************************************************/
 
@@ -29,9 +59,8 @@
   */ 
 ReturnType Gpio_Init(Gpio_RegDef *p_Gpio_st, const Gpio_Config *p_GpioCfg_st)
 {
-    uint32_t TempValue_u32;
+    uint32 TempValue_u32;
     ReturnType RetValue = RET_OK;
-    Exti_Line_e Line_e;
 
     if(FALSE == Gpio_IsLocked(p_Gpio_st, p_GpioCfg_st->Gpio_PinNum_e))
     {
@@ -92,15 +121,9 @@ ReturnType Gpio_Init(Gpio_RegDef *p_Gpio_st, const Gpio_Config *p_GpioCfg_st)
         {
             if(GPIO_MODE_IN == p_GpioCfg_st->Gpio_PinMode_e)
             {
-                /* Type casting */
-                Line_e = (Exti_Line_e)(p_GpioCfg_st->Gpio_PinNum_e);
-
-                /* Enable Exti line corresponds to pin.
-                   Function handler initialize */
-                Exti_IntEnable(Line_e, p_GpioCfg_st->Gpio_ExIntCallback);
-
-                /* Choose Edge detected */
-                Exti_EdgeCfg(Line_e, p_GpioCfg_st->Gpio_ExIntEdge_e);
+                Gpio_ExtInit(p_GpioCfg_st->Gpio_PinNum_e, \
+                             p_GpioCfg_st->Gpio_ExIntEdge_e, \
+                             p_GpioCfg_st->Gpio_ExIntCallback);
             }
             else
             {
@@ -114,6 +137,7 @@ ReturnType Gpio_Init(Gpio_RegDef *p_Gpio_st, const Gpio_Config *p_GpioCfg_st)
     }
     else
     {
+        /* Gpio pin locked */
         RetValue = RET_NOT_OK;
     }
 
@@ -145,10 +169,10 @@ ReturnType Gpio_Init(Gpio_RegDef *p_Gpio_st, const Gpio_Config *p_GpioCfg_st)
   * @retval  0 - Pin is low level
   *          1 - Pin is high level
   */ 
-uint8_t Gpio_ReadPin(const Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_e)
+uint8 Gpio_ReadPin(const Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_e)
 {
-    uint8_t Value_u8;
-    Value_u8 = (uint8_t)(((p_Gpio_st->IDR) >> GPIO_IDR_BIT_POS(PinNum_e) & \
+    uint8 Value_u8;
+    Value_u8 = (uint8)(((p_Gpio_st->IDR) >> GPIO_IDR_BIT_POS(PinNum_e) & \
                            MASK_OF_PIN_IN_GPIO_IDR));
 
     return Value_u8;
@@ -261,9 +285,9 @@ void Gpio_TogglePin(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_e)
   * @retval  TRUE - Pin locked
   *          FALSE - Pin didn't locked
   */
-uint8_t Gpio_IsLocked(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8)
+uint8 Gpio_IsLocked(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8)
 {
-    uint8_t RetValue_u8;
+    uint8 RetValue_u8;
     if((0 != (p_Gpio_st->LCKR & GPIO_LCKR_LCKK_MASK)) && \
        (0 != (p_Gpio_st->LCKR & GPIO_LCKR_LCK_BIT_MASK(PinNum_u8))))
     {
@@ -303,7 +327,7 @@ uint8_t Gpio_IsLocked(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8)
   * @retval  RET_OK - Pin has locked success
   *          RET_NOT_OK - Pin has locked fail
   */
-ReturnType Gpio_PinCfgLock(Gpio_RegDef *p_Gpio_st, uint32_t PinsToLock_u32)
+ReturnType Gpio_PinCfgLock(Gpio_RegDef *p_Gpio_st, uint32 PinsToLock_u32)
 {
     ReturnType RetValue = RET_OK;
 
@@ -324,4 +348,16 @@ ReturnType Gpio_PinCfgLock(Gpio_RegDef *p_Gpio_st, uint32_t PinsToLock_u32)
     }
 
     return RetValue;
+}
+
+/**
+  * @brief   Gpio handler is called by Exti handlers
+  * @note    None
+  * @param   ExtLine_e   Exti line number.
+  * @retval  None
+  */
+void Gpio_ExtHandler(Exti_Line ExtLine_e)
+{
+    /* Call user's handler function */
+    p_GpioHandler((Gpio_PinNum)ExtLine_e);
 }

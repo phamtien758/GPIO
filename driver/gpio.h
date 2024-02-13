@@ -31,7 +31,7 @@
 #define LOCK_PIN_14    GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_14)
 #define LOCK_PIN_15    GPIO_LCKR_LCK_BIT_MASK(GPIO_PINNUM_15)
 
-#define LOCK_PIN_ALL   ((uint32_t)(LOCK_PIN_0 | LOCK_PIN_1 | LOCK_PIN_2 | \
+#define LOCK_PIN_ALL   ((uint32)(LOCK_PIN_0 | LOCK_PIN_1 | LOCK_PIN_2 | \
                                    LOCK_PIN_3 | LOCK_PIN_4 | LOCK_PIN_5 | \
                                    LOCK_PIN_6 | LOCK_PIN_7 | LOCK_PIN_8 | \
                                    LOCK_PIN_9 | LOCK_PIN_10 | LOCK_PIN_11 | \
@@ -144,19 +144,35 @@ typedef enum
 }Gpio_PinNum;
 
 /*
+ * @Gpio_ExtEdge_def
+ * @brief External interrupt edge triggers. Match with Exti_Edge enum
+ */
+typedef enum
+{
+	GPIO_EXTEDGE_FALL      = 0,    /* Falling edge */
+	GPIO_EXTEDGE_RISE      = 1,    /* Rising edge */
+	GPIO_EXTEDGE_FALLRISE  = 2,    /* Both falling and rising edge */
+}Gpio_ExtEdge;
+
+/*
+ * @brief Pointer to user's handler
+ */
+typedef void (*GpioFuncHandler)(Gpio_PinNum);
+
+/*
  * @brief Gpio pin configuration
  */
 typedef struct
 {
-    Gpio_PinNum      Gpio_PinNum_e;        /* Refer to @Gpio_PinState_def */
+    Gpio_PinNum      Gpio_PinNum_e;        /* Refer to @Gpio_PinNum_def */
     Gpio_Mode        Gpio_PinMode_e;       /* Refer to @Gpio_Mode_def */
     Gpio_OutSpeed    Gpio_PinSpeed_e;      /* Refer to @Gpio_OutSpeed_def */
     Gpio_PullUpDown  Gpio_PinPuPd_e;       /* Refer to @Gpio_PullUpDown_def */
     Gpio_OutType     Gpio_PinOutType_e;    /* Refer to @Gpio_OutType_def */
     Gpio_AltFun      Gpio_PinAltFun_e;     /* Refer to @Gpio_AltFun */
-    uint8_t          Gpio_ExIntEnable_u8;  /* External interrupt for Gpio pin */
-    Exti_Edge_e      Gpio_ExIntEdge_e;     /* Edge for external interrupt */
-    FuncHandler      Gpio_ExIntCallback;   /* Pointer to user's handler */
+    uint8            Gpio_ExIntEnable_u8;  /* External interrupt for Gpio pin */
+    Gpio_ExtEdge     Gpio_ExIntEdge_e;     /* Edge for external interrupt */
+    GpioFuncHandler  Gpio_ExIntCallback;   /* Pointer to user's handler */
 }Gpio_Config;
 
 /*** EXTERN *******************************************************************/
@@ -167,7 +183,7 @@ typedef struct
 ReturnType Gpio_Init(Gpio_RegDef *p_Gpio_st, const Gpio_Config *p_GpioCfg_st);
 
 /* Read the state of pin */
-uint8_t Gpio_ReadPin(const Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8);
+uint8 Gpio_ReadPin(const Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8);
 
 /* Write to output pin */
 void Gpio_WritePin(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8, \
@@ -177,9 +193,12 @@ void Gpio_WritePin(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8, \
 void Gpio_TogglePin(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8);
 
 /* Check lock pin */
-uint8_t Gpio_IsLocked(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8);
+uint8 Gpio_IsLocked(Gpio_RegDef *p_Gpio_st, Gpio_PinNum PinNum_u8);
 
 /* Gpio lock configuration pin */
-ReturnType Gpio_PinCfgLock(Gpio_RegDef *p_Gpio_st, uint32_t PinsToLock_u32);
+ReturnType Gpio_PinCfgLock(Gpio_RegDef *p_Gpio_st, uint32 PinsToLock_u32);
+
+/* Gpio handler function */
+void Gpio_ExtHandler(Exti_Line ExtLine_e);
 
 #endif /* GPIO_H */

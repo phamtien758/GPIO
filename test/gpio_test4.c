@@ -1,5 +1,5 @@
 /*******************************************************************************
- * File  : gpio_test1.c       
+ * File  : gpio_test4.c       
  * Author: phamtien758      
  * Brief : Test Gpio_PinCfgLock function
  ******************************************************************************/
@@ -7,9 +7,9 @@
 #include "gpio.h"
 #include "stub.h"
 
-void delay(uint32_t times)
+void delay(uint32 times)
 {
-    for (uint32_t i = 0; i < times; i++);
+    for (uint32 i = 0; i < times; i++);
 }
 
 Gpio_Config Config1 = 
@@ -21,15 +21,15 @@ Gpio_Config Config1 =
     .Gpio_PinOutType_e   = GPIO_OUTTYPE_PUSPUL,
     .Gpio_PinAltFun_e    = GPIO_ALTFUN_0,
     .Gpio_ExIntEnable_u8 = DISABLE,
-    .Gpio_ExIntEdge_e    = EXTI_EDGE_FALL,
+    .Gpio_ExIntEdge_e    = GPIO_EXTEDGE_FALL,
     .Gpio_ExIntCallback  = NULL
 };
 
 int main(void)
 {
     ReturnType retValue;
-    uint8_t temp;
-    uint32_t pinlock_u32;
+    uint8 temp;
+    uint32 pinlock_u32;
 
     RCC_GPIOA_CLK_EN();
     RCC_GPIOC_CLK_EN();
